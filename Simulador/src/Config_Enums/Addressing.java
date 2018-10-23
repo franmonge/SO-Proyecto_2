@@ -7,5 +7,5 @@ package Config_Enums;
 
 
 public enum Addressing {
-    DYNAMIC
+    DYNAMIC, STATIC, EXPLICIT, IMPLICIT
 }

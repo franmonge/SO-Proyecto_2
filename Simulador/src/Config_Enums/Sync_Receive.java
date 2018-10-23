@@ -5,10 +5,7 @@
  */
 package Config_Enums;
 
-/**
- *
- * @author aleandro
- */
+
 public enum Sync_Receive {
-    BLOCKING, NON_BLOCKING, TEST_FOR_ARRIVAL
+    NON_BLOCKING, TEST_FOR_ARRIVAL
 }

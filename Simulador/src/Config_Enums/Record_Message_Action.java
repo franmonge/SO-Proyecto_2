@@ -5,10 +5,7 @@
  */
 package Config_Enums;
 
-/**
- *
- * @author aleandro
- */
+
 public enum Record_Message_Action {
     RECEIVED, SENT
 }

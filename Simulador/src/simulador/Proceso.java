@@ -6,12 +6,8 @@
 package simulador;
 
 import java.util.ArrayList;
-import simulador.Mensaje;
 
-/**
- *
- * @author FranM
- */
+
 public class Proceso {
     String idProceso;    
     Boolean sending;

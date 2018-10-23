@@ -5,23 +5,16 @@
  */
 package simulador;
 
-/**
- *
- * @author aleandro
- */
+
 public class Simulador {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
         
         PantallaPrincipal ventanaPrincipal = new PantallaPrincipal();
         ventanaPrincipal.setVisible(true);
         
-        //PantallaConfiguracion ventanaConfigs = new PantallaConfiguracion(ventanaPrincipal, true);
-        //ventanaConfigs.setVisible(true);
     }
-    
 }

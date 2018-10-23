@@ -5,23 +5,16 @@
  */
 package simulador;
 
-/**
- *
- * @author FranM
- */
+
 public class Mensaje {
     Integer idMensaje;
-    long largo;
-    Integer prioridad;
-    String texto;   //Definir si imagenes y videos se manejan solo con url.
+    String path;
     String sourceID;
     String destinationID;
 
-    public Mensaje(Integer idMensaje, long largo, Integer prioridad, String texto, String sourceID, String destinationID) {
+    public Mensaje(Integer idMensaje, String texto, String sourceID, String destinationID) {
         this.idMensaje = idMensaje;
-        this.largo = largo;
-        this.prioridad = prioridad;
-        this.texto = texto;
+        this.path = texto;
         this.sourceID = sourceID;
         this.destinationID = destinationID;
     }
@@ -46,37 +39,21 @@ public class Mensaje {
         return idMensaje;
     }
 
-    public long getLargo() {
-        return largo;
-    }
-
-    public Integer getPrioridad() {
-        return prioridad;
-    }
-
-    public String getTexto() {
-        return texto;
+    public String getPath() {
+        return path;
     }
 
     public void setIdMensaje(Integer idMensaje) {
         this.idMensaje = idMensaje;
     }
 
-    public void setLargo(Integer largo) {
-        this.largo = largo;
-    }
-
-    public void setPrioridad(Integer prioridad) {
-        this.prioridad = prioridad;
-    }
-
-    public void setTexto(String texto) {
-        this.texto = texto;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     @Override
     public String toString() {
-        return "Mensaje{" + "idMensaje=" + idMensaje + ", tipo=" + ", largo=" + largo + ", prioridad=" + prioridad + ", texto=" + texto + '}';
+        return "Mensaje{" + "idMensaje=" + idMensaje + ", path=" + path + ", sourceID=" + sourceID + ", destinationID=" + destinationID + '}';
     }
     
 }

@@ -5,10 +5,7 @@
  */
 package Config_Enums;
 
-/**
- *
- * @author aleandro
- */
+
 public enum Addressing {
-    EXPLICIT, IMPLICIT, STATIC, DYNAMIC
+    DYNAMIC
 }

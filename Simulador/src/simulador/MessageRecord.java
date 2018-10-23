@@ -9,10 +9,7 @@ import Config_Enums.Record_Message_Action;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-/**
- *
- * @author aleandro
- */
+
 public class MessageRecord {
     private String timeStamp;
     private Record_Message_Action action;

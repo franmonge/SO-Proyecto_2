@@ -5,10 +5,7 @@
  */
 package Config_Enums;
 
-/**
- *
- * @author FranM
- */
+
 public enum ImagesExtension {
-    jpg, JPG, jpeg, JPEG, png, PNG, bmp, BMP, gif, GIF
+    jpg, JPG, jpeg, JPEG, png, PNG
 }

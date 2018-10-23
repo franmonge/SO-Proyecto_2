@@ -7,10 +7,7 @@ package simulador;
 
 import Config_Enums.Request_Action;
 
-/**
- *
- * @author aleandro
- */
+
 public class Request {
     private String sourceID;
     private String destinationID;
@@ -44,9 +41,5 @@ public class Request {
 
     public void setAction(Request_Action action) {
         this.action = action;
-    }
-    
-    
-    
-    
+    }    
 }

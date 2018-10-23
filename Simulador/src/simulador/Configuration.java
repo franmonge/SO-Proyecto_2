@@ -11,10 +11,7 @@ import Config_Enums.Format_Content;
 import Config_Enums.Format_Length;
 import Config_Enums.MailBox_Discipline;
 
-/**
- *
- * @author aleandro
- */
+
 public class Configuration {
     Sync_Receive receive;
     Sync_Send send;
@@ -81,13 +78,5 @@ public class Configuration {
     public void setDiscipline(MailBox_Discipline discipline) {
         this.discipline = discipline;
     }
-    
-   
-    
-    
-    
-    
-    
-    
     
 }

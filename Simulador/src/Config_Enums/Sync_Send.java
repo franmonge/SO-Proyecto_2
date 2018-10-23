@@ -5,10 +5,7 @@
  */
 package Config_Enums;
 
-/**
- *
- * @author aleandro
- */
+
 public enum Sync_Send {
-    BLOCKING, NON_BLOCKING
+    NON_BLOCKING
 }

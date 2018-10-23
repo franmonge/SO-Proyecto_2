@@ -5,10 +5,7 @@
  */
 package Config_Enums;
 
-/**
- *
- * @author aleandro
- */
+
 public enum Format_Length {
-    FIXED, VARIABLE
+    VARIABLE
 }

@@ -16,10 +16,7 @@ import Config_Enums.Sync_Send;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author aleandro
- */
+
 public class Controller {
     private static Controller instance = null;
     private Configuration configs;
@@ -30,7 +27,6 @@ public class Controller {
     public static Integer messageIDCounter;
     
     private Controller(){
-        //configs = new Configuration();
         procesos = new ArrayList<Proceso>();
         mailboxes = new ArrayList<MailBox>();
         requests = new ArrayList<Request>();
@@ -65,40 +61,7 @@ public class Controller {
         Proceso sender = getProcess(destinationID); //NO SE SABE SI SIRVE EN MAILBOX
         Proceso receiver = getProcess(sourceID);
         
-        if(Addressing.EXPLICIT.equals(configs.getAddressing()) || Addressing.IMPLICIT.equals(configs.getAddressing())){ // Direct Addressing
         
-            if(isThereAPendingMessageOnSystemMailBox(destinationID, sourceID)){ // Si al solicitar, ya había un msj 
-                Mensaje message = getMessageFromSystemMailBox(sourceID, destinationID);
-                System.out.println("Was the received message null? " + String.valueOf(message == null));
-                if(configs.getSend().equals(Sync_Send.BLOCKING)){ // Hay q desbloquear el sender y quitar el sending
-                    removeRequest(message, Request_Action.ACCUSEMENT);
-                    sender.setBlocking(false);
-                }
-                receiver.setReceiving(false);
-                receiver.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
-                
-                //removeRequest(message, Request_Action.ACCUSEMENT);
-                // Hay que remover el request si es que hay
-                
-                
-            }
-            else{ // No hay un msj pendiente por recibir, entonces hay que hacer el request
-                if(configs.getReceive().equals(Sync_Receive.NON_BLOCKING)){
-                    // Excepto si es Non-Blocking -> No pasa nada
-                }else{
-                    requests.add(new Request(sourceID, destinationID, Request_Action.RECEIVE));
-                    receiver.setReceiving(Boolean.TRUE);
-                    if(configs.getReceive().equals(Sync_Receive.BLOCKING))
-                        receiver.setBlocking(true);
-                    if(configs.getReceive().equals(Sync_Receive.TEST_FOR_ARRIVAL))
-                        receiver.setBusy(true);
-                }
-                
-                
-                
-            
-            }
-        }else{ // Indirect Addressing
             if(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
                 System.out.println("Existing message on MailBox to be delivered");
                 
@@ -121,13 +84,11 @@ public class Controller {
                     System.out.println("Receive Non-Blocking should not reach this point");
                     requests.add(new Request(sourceID, destinationID, Request_Action.RECEIVE));
                     receiver.setReceiving(Boolean.TRUE);
-                    if(configs.getReceive().equals(Sync_Receive.BLOCKING))
-                        receiver.setBlocking(true);
                     if(configs.getReceive().equals(Sync_Receive.TEST_FOR_ARRIVAL))
                         receiver.setBusy(true);
                 }
             }        
-        }System.out.println("Requests now: " + requests.size());
+        System.out.println("Requests now: " + requests.size());
         System.out.println("Request summary");
         for(Request req: requests)
             System.out.println("Req SOURCEID: " + req.getSourceID() + " DESTINATIONID: " + req.getDestinationID() + " TYPE: " +req.getAction().toString());
@@ -150,73 +111,20 @@ public class Controller {
         
         if(mail.getBufferMensajes().size() > 0){ 
             pickedMessage = mail.getBufferMensajes().get(0);
-            if(configs.getDiscipline().equals(MailBox_Discipline.FIFO)){//FiFO
+            if(configs.getDiscipline().equals(MailBox_Discipline.FIFO)){
                 mail.getBufferMensajes().remove(0);
             }else{ // Priority
                 for(Mensaje message: mail.getBufferMensajes()){
-                    if(message.getPrioridad() > pickedMessage.getPrioridad()){
+                    //if(message.getPrioridad() > pickedMessage.getPrioridad()){
                         pickedMessage = message;
-                    }
+                    //}
                 }
                 mail.getBufferMensajes().remove(pickedMessage);
             }
         }
         return pickedMessage;
     }
-    
-    private Mensaje getMessageFromSystemMailBox(String sourceID, String destinationID){
-        Mensaje pickedMessage = null;
-        if(systemMailBox.size() > 0){
-            if(Addressing.IMPLICIT.equals(configs.getAddressing())){ // Implicit - Falta el priority
-                if(MailBox_Discipline.FIFO.equals(configs.getDiscipline())){ // FiFo
-                    for(Mensaje message: systemMailBox){  
-                        if(message.getDestinationID().equals(sourceID)){
-                            pickedMessage = message; 
-                            break;
-                        }
-                    }
-                
-                }else{ // Implicit Priority
-                    for(Mensaje message: systemMailBox){
-                        if(message.getDestinationID().equals(sourceID)){
-                            pickedMessage = message;
-                            break;
-                        }
-                    }
-                    for(Mensaje message: systemMailBox){
-                        if((message.getDestinationID().equals(sourceID)) && (message.getPrioridad() > pickedMessage.getPrioridad())){
-                            pickedMessage = message;
-                        }
-                    }
-                }
-            }else{  // Addressing Explicit
-                
-                if(MailBox_Discipline.FIFO.equals(configs.getDiscipline())){
-                    for(Mensaje message: systemMailBox){  // FiFo - Falta el priority 
-                        if(message.getSourceID().equals(destinationID) && message.getDestinationID().equals(sourceID)){
-                            pickedMessage = message; 
-                            break;
-                        }
-                    }
-                }else{ // Explicit Priority
-                    // Implicit Priority
-                    for(Mensaje message: systemMailBox){
-                        if(message.getDestinationID().equals(sourceID) && message.getSourceID().equals(destinationID)){
-                            pickedMessage = message;
-                            break;
-                        }
-                    }
-                    for(Mensaje message: systemMailBox){
-                        if((message.getDestinationID().equals(sourceID)) && message.getSourceID().equals(destinationID) && (message.getPrioridad() > pickedMessage.getPrioridad())){
-                            pickedMessage = message;
-                        }
-                    }
-                }
-            }
-            systemMailBox.remove(pickedMessage);
-        }
-        return pickedMessage;
-    }
+  
     
     
     private boolean isThereAnAccusementRequest(String sourceID, String destinationID){
@@ -249,8 +157,7 @@ public class Controller {
                     System.out.println("IMPLICIT: The requested message already exists in the system mailbox");
                     return true;
                 }
-        }
-        
+        }        
         return false;
     }
     
@@ -306,9 +213,6 @@ public class Controller {
             }    
                 
             procesoDestino.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, mensaje));
-            if(configs.receive.equals(Sync_Receive.BLOCKING)){
-                procesoDestino.setBlocking(false);
-            }
             if(configs.receive.equals(Sync_Receive.TEST_FOR_ARRIVAL)){
                 procesoDestino.setBusy(false);
             }

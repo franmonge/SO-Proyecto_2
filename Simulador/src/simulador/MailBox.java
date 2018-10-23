@@ -7,10 +7,7 @@ package simulador;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author FranM
- */
+
 public class MailBox {
     String idMailBox;
     int cantidadMensajesMaxima;

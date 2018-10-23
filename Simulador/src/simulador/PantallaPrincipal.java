@@ -13,7 +13,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import Config_Enums.Addressing;
 import Config_Enums.Format_Content;
 import Config_Enums.Format_Length;
-import Config_Enums.ImagesExtension;
+import Config_Enums.FilesExtension;
 import Config_Enums.MailBox_Discipline;
 import Config_Enums.Sync_Receive;
 import Config_Enums.Sync_Send;
@@ -34,12 +34,31 @@ public class PantallaPrincipal extends javax.swing.JFrame {
      * Creates new form PantallaPrincipal
      */
     public PantallaPrincipal() {
-        controlador = Controller.getInstance();
-        initComponents();        
+        controlador = Controller.getInstance();        
+        initComponents();
+        
+        Sync_Receive receive = Sync_Receive.TEST_FOR_ARRIVAL;
+        Sync_Send send;
+        Addressing addressing = null;
+        Format_Content content;
+        Format_Length length;
+        MailBox_Discipline discipline;
+
+        send = Sync_Send.NON_BLOCKING;
+        //receive = Sync_Receive.TEST_FOR_ARRIVAL;
+        length = Format_Length.VARIABLE;
+        discipline = MailBox_Discipline.PRIORITY;
+        content = Format_Content.valueOf("IMAGE");
+        addressing = Addressing.DYNAMIC;
+
+        controlador.setConfiguration(receive, send, addressing, content, length, discipline);
+        //checkPanelAddMailBoxVisibility();
         
         configTabs.setEnabledAt(1,false);
         configTabs.setEnabledAt(2,false);
         configTabs.setEnabledAt(3,true);
+        
+        
     }
 
     /**
@@ -57,49 +76,48 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         btngrpFormatLength = new javax.swing.ButtonGroup();
         btngrpMailBoxDiscipline = new javax.swing.ButtonGroup();
         btngrpInteractiveSend = new javax.swing.ButtonGroup();
-        jButton6 = new javax.swing.JButton();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         configTabs = new javax.swing.JTabbedPane();
         variableTabPanel1 = new javax.swing.JPanel();
         panelAddMailBox = new javax.swing.JPanel();
-        txfMailBoxID = new javax.swing.JTextField();
+        txfApplicationName = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        spinMaxNoMessages = new javax.swing.JSpinner();
-        btnAddMailBox = new javax.swing.JButton();
+        spinAppPriority = new javax.swing.JSpinner();
+        btnAddApplication = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tableMailBox = new javax.swing.JTable();
+        tblAppNames = new javax.swing.JTable();
         lblSubscribeToMailBox2 = new javax.swing.JLabel();
-        spinMaxNoMessages3 = new javax.swing.JSpinner();
+        spinAppQueue = new javax.swing.JSpinner();
         panelAddProcess = new javax.swing.JPanel();
-        txfProcessID = new javax.swing.JTextField();
+        txfPrinterName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        btnAddProcess = new javax.swing.JButton();
+        btnAddPrinter = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableProcess = new javax.swing.JTable();
+        tblPrintersNames = new javax.swing.JTable();
         lblSubscribeToMailBox = new javax.swing.JLabel();
-        spinMaxNoMessages1 = new javax.swing.JSpinner();
+        spinPrinterPriority = new javax.swing.JSpinner();
         lblSubscribeToMailBox1 = new javax.swing.JLabel();
-        spinMaxNoMessages2 = new javax.swing.JSpinner();
+        spinPrinterQueue = new javax.swing.JSpinner();
         btnGoToRun = new javax.swing.JButton();
         startTab3 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tableInteractiveProcessList = new javax.swing.JTable();
+        tblInteractiveAppList = new javax.swing.JTable();
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        btnReceiveMessage = new javax.swing.JButton();
-        btnReceiveMessage1 = new javax.swing.JButton();
+        btnPrintNext = new javax.swing.JButton();
+        btnPrintAll = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
-        btnRunChooseFile = new javax.swing.JButton();
+        btnInteractiveChooseFile = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
-        btnSendMessage = new javax.swing.JButton();
+        btnPrintRequest = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        btnChooseFile = new javax.swing.JButton();
+        btnBatchChooseFile = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         spinBatchLines = new javax.swing.JSpinner();
         btnExecuteBatch = new javax.swing.JButton();
@@ -108,16 +126,16 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        tblActionsDisplay = new javax.swing.JTable();
+        tblPrintersActionsDisplay = new javax.swing.JTable();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
-        tblProcessDisplay = new javax.swing.JTable();
+        tblPrintersDisplay = new javax.swing.JTable();
         jPanel12 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jScrollPane17 = new javax.swing.JScrollPane();
-        tblMailBoxDisplay = new javax.swing.JTable();
+        tblAppsDisplay = new javax.swing.JTable();
         jScrollPane8 = new javax.swing.JScrollPane();
-        tblMessageDisplay = new javax.swing.JTable();
+        tblAppsActionsDisplay = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel20 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
@@ -170,9 +188,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         panelAddMailBox.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        txfMailBoxID.addActionListener(new java.awt.event.ActionListener() {
+        txfApplicationName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfMailBoxIDActionPerformed(evt);
+                txfApplicationNameActionPerformed(evt);
             }
         });
 
@@ -182,14 +200,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jLabel6.setText("Priority");
 
-        btnAddMailBox.setText("Add");
-        btnAddMailBox.addActionListener(new java.awt.event.ActionListener() {
+        btnAddApplication.setText("Add");
+        btnAddApplication.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddMailBoxActionPerformed(evt);
+                btnAddApplicationActionPerformed(evt);
             }
         });
 
-        tableMailBox.setModel(new javax.swing.table.DefaultTableModel(
+        tblAppNames.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -212,10 +230,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(tableMailBox);
-        if (tableMailBox.getColumnModel().getColumnCount() > 0) {
-            tableMailBox.getColumnModel().getColumn(0).setResizable(false);
-            tableMailBox.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane2.setViewportView(tblAppNames);
+        if (tblAppNames.getColumnModel().getColumnCount() > 0) {
+            tblAppNames.getColumnModel().getColumn(0).setResizable(false);
+            tblAppNames.getColumnModel().getColumn(1).setResizable(false);
         }
 
         lblSubscribeToMailBox2.setText("Queue size");
@@ -235,21 +253,21 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                             .addGroup(panelAddMailBoxLayout.createSequentialGroup()
                                 .addComponent(lblSubscribeToMailBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(spinMaxNoMessages3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(spinAppQueue, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelAddMailBoxLayout.createSequentialGroup()
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(spinMaxNoMessages, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(spinAppPriority, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelAddMailBoxLayout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
-                                .addComponent(txfMailBoxID, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(txfApplicationName, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(9, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddMailBoxLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelAddMailBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddMailBoxLayout.createSequentialGroup()
-                        .addComponent(btnAddMailBox, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddApplication, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(96, 96, 96))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddMailBoxLayout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -263,17 +281,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(panelAddMailBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txfMailBoxID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txfApplicationName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(panelAddMailBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(spinMaxNoMessages, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinAppPriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(panelAddMailBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(spinMaxNoMessages3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spinAppQueue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSubscribeToMailBox2))
                 .addGap(18, 18, 18)
-                .addComponent(btnAddMailBox)
+                .addComponent(btnAddApplication)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -282,24 +300,19 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         panelAddProcess.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         panelAddProcess.setPreferredSize(new java.awt.Dimension(296, 456));
 
-        txfProcessID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfProcessIDActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Add Printer");
 
-        btnAddProcess.setText("Add");
-        btnAddProcess.addActionListener(new java.awt.event.ActionListener() {
+        btnAddPrinter.setText("Add");
+        btnAddPrinter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddProcessActionPerformed(evt);
+                btnAddPrinterActionPerformed(evt);
             }
         });
 
         jLabel3.setText("Name");
 
-        tableProcess.setModel(new javax.swing.table.DefaultTableModel(
+        tblPrintersNames.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -322,18 +335,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableProcess.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblPrintersNames.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                //tableProcessMouseClicked(evt);
+               // tblPrintersNamesMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                //tableProcessMouseEntered(evt);
+                //tblPrintersNamesMouseEntered(evt);
             }
         });
-        jScrollPane1.setViewportView(tableProcess);
-        if (tableProcess.getColumnModel().getColumnCount() > 0) {
-            tableProcess.getColumnModel().getColumn(0).setResizable(false);
-            tableProcess.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane1.setViewportView(tblPrintersNames);
+        if (tblPrintersNames.getColumnModel().getColumnCount() > 0) {
+            tblPrintersNames.getColumnModel().getColumn(0).setResizable(false);
+            tblPrintersNames.getColumnModel().getColumn(1).setResizable(false);
         }
 
         lblSubscribeToMailBox.setText("Priority");
@@ -352,7 +365,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                             .addGroup(panelAddProcessLayout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txfProcessID))
+                                .addComponent(txfPrinterName))
                             .addGroup(panelAddProcessLayout.createSequentialGroup()
                                 .addComponent(lblSubscribeToMailBox, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
@@ -360,7 +373,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         .addGroup(panelAddProcessLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panelAddProcessLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(spinMaxNoMessages1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(spinPrinterPriority, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelAddProcessLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(panelAddProcessLayout.createSequentialGroup()
                                     .addGap(94, 94, 94)
@@ -372,13 +385,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddProcessLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnAddProcess, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAddPrinter, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(119, 119, 119))
             .addGroup(panelAddProcessLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblSubscribeToMailBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(69, 69, 69)
-                .addComponent(spinMaxNoMessages2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spinPrinterQueue, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelAddProcessLayout.setVerticalGroup(
@@ -390,19 +403,19 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addGap(28, 28, 28)
                         .addGroup(panelAddProcessLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txfProcessID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txfPrinterName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelAddProcessLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblSubscribeToMailBox)
-                            .addComponent(spinMaxNoMessages1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(spinPrinterPriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(54, 54, 54))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddProcessLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(panelAddProcessLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(spinMaxNoMessages2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spinPrinterQueue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblSubscribeToMailBox1))))
-                .addComponent(btnAddProcess)
+                .addComponent(btnAddPrinter)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -424,7 +437,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 .addComponent(panelAddProcess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(panelAddMailBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(btnGoToRun, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(81, 81, 81))
         );
@@ -450,7 +463,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jLabel8.setText("Interactive");
 
-        tableInteractiveProcessList.setModel(new javax.swing.table.DefaultTableModel(
+        tblInteractiveAppList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -473,34 +486,34 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableInteractiveProcessList.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblInteractiveAppList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableInteractiveProcessListMouseClicked(evt);
+                //tblInteractiveAppListMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(tableInteractiveProcessList);
-        if (tableInteractiveProcessList.getColumnModel().getColumnCount() > 0) {
-            tableInteractiveProcessList.getColumnModel().getColumn(0).setResizable(false);
-            tableInteractiveProcessList.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane3.setViewportView(tblInteractiveAppList);
+        if (tblInteractiveAppList.getColumnModel().getColumnCount() > 0) {
+            tblInteractiveAppList.getColumnModel().getColumn(0).setResizable(false);
+            tblInteractiveAppList.getColumnModel().getColumn(1).setResizable(false);
         }
 
         jPanel6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel5.setText("Print");
 
-        btnReceiveMessage.setText("Print Next");
-        btnReceiveMessage.setEnabled(false);
-        btnReceiveMessage.addActionListener(new java.awt.event.ActionListener() {
+        btnPrintNext.setText("Print Next");
+        btnPrintNext.setEnabled(false);
+        btnPrintNext.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReceiveMessageActionPerformed(evt);
+                //btnPrintNextActionPerformed(evt);
             }
         });
 
-        btnReceiveMessage1.setText("Print All");
-        btnReceiveMessage1.setEnabled(false);
-        btnReceiveMessage1.addActionListener(new java.awt.event.ActionListener() {
+        btnPrintAll.setText("Print All");
+        btnPrintAll.setEnabled(false);
+        btnPrintAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //btnReceiveMessage1ActionPerformed(evt);
+               // btnPrintAllActionPerformed(evt);
             }
         });
 
@@ -514,9 +527,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnReceiveMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnPrintNext, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(74, 74, 74)
-                .addComponent(btnReceiveMessage1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnPrintAll, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19))
         );
         jPanel6Layout.setVerticalGroup(
@@ -526,27 +539,27 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnReceiveMessage)
-                    .addComponent(btnReceiveMessage1))
+                    .addComponent(btnPrintNext)
+                    .addComponent(btnPrintAll))
                 .addGap(16, 16, 16))
         );
 
         jPanel8.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        btnRunChooseFile.setText("Choose File");
-        btnRunChooseFile.addActionListener(new java.awt.event.ActionListener() {
+        btnInteractiveChooseFile.setText("Choose File");
+        btnInteractiveChooseFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRunChooseFileActionPerformed(evt);
+                btnInteractiveChooseFileActionPerformed(evt);
             }
         });
 
         jLabel11.setText("Request");
 
-        btnSendMessage.setText("Print Request");
-        btnSendMessage.setEnabled(false);
-        btnSendMessage.addActionListener(new java.awt.event.ActionListener() {
+        btnPrintRequest.setText("Print Request");
+        btnPrintRequest.setEnabled(false);
+        btnPrintRequest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSendMessageActionPerformed(evt);
+                //btnPrintRequestActionPerformed(evt);
             }
         });
 
@@ -562,8 +575,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGap(114, 114, 114)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnSendMessage)
-                            .addComponent(btnRunChooseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnPrintRequest)
+                            .addComponent(btnInteractiveChooseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
@@ -571,9 +584,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addComponent(jLabel11)
                 .addGap(76, 76, 76)
-                .addComponent(btnRunChooseFile)
+                .addComponent(btnInteractiveChooseFile)
                 .addGap(37, 37, 37)
-                .addComponent(btnSendMessage)
+                .addComponent(btnPrintRequest)
                 .addContainerGap(116, Short.MAX_VALUE))
         );
 
@@ -615,10 +628,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jLabel9.setText("Batch");
 
-        btnChooseFile.setText("Choose File");
-        btnChooseFile.addActionListener(new java.awt.event.ActionListener() {
+        btnBatchChooseFile.setText("Choose File");
+        btnBatchChooseFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnChooseFileActionPerformed(evt);
+                btnBatchChooseFileActionPerformed(evt);
             }
         });
 
@@ -627,7 +640,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         btnExecuteBatch.setText("Execute");
         btnExecuteBatch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //btnExecuteBatchActionPerformed(evt);
+                btnExecuteBatchActionPerformed(evt);
             }
         });
 
@@ -643,7 +656,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         .addComponent(spinBatchLines, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel13))
                 .addGap(78, 78, 78)
-                .addComponent(btnChooseFile)
+                .addComponent(btnBatchChooseFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnExecuteBatch)
                 .addContainerGap())
@@ -662,7 +675,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(spinBatchLines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnChooseFile)
+                        .addComponent(btnBatchChooseFile)
                         .addComponent(btnExecuteBatch)))
                 .addGap(39, 39, 39))
         );
@@ -720,7 +733,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jPanel7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        tblActionsDisplay.setModel(new javax.swing.table.DefaultTableModel(
+        tblPrintersActionsDisplay.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -746,21 +759,21 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblActionsDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblPrintersActionsDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblActionsDisplayMouseClicked(evt);
+                tblPrintersActionsDisplayMouseClicked(evt);
             }
         });
-        jScrollPane6.setViewportView(tblActionsDisplay);
-        if (tblActionsDisplay.getColumnModel().getColumnCount() > 0) {
-            tblActionsDisplay.getColumnModel().getColumn(0).setResizable(false);
-            tblActionsDisplay.getColumnModel().getColumn(1).setResizable(false);
-            tblActionsDisplay.getColumnModel().getColumn(2).setResizable(false);
+        jScrollPane6.setViewportView(tblPrintersActionsDisplay);
+        if (tblPrintersActionsDisplay.getColumnModel().getColumnCount() > 0) {
+            tblPrintersActionsDisplay.getColumnModel().getColumn(0).setResizable(false);
+            tblPrintersActionsDisplay.getColumnModel().getColumn(1).setResizable(false);
+            tblPrintersActionsDisplay.getColumnModel().getColumn(2).setResizable(false);
         }
 
         jLabel15.setText("Printers List");
 
-        tblProcessDisplay.setModel(new javax.swing.table.DefaultTableModel(
+        tblPrintersDisplay.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -786,15 +799,15 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblProcessDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblPrintersDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblProcessDisplayMouseClicked(evt);
+                //tblPrintersDisplayMouseClicked(evt);
             }
         });
-        jScrollPane7.setViewportView(tblProcessDisplay);
-        if (tblProcessDisplay.getColumnModel().getColumnCount() > 0) {
-            tblProcessDisplay.getColumnModel().getColumn(0).setResizable(false);
-            tblProcessDisplay.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane7.setViewportView(tblPrintersDisplay);
+        if (tblPrintersDisplay.getColumnModel().getColumnCount() > 0) {
+            tblPrintersDisplay.getColumnModel().getColumn(0).setResizable(false);
+            tblPrintersDisplay.getColumnModel().getColumn(1).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -829,7 +842,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         jLabel19.setText("Applications List");
 
-        tblMailBoxDisplay.setModel(new javax.swing.table.DefaultTableModel(
+        tblAppsDisplay.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -855,18 +868,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblMailBoxDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblAppsDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblMailBoxDisplayMouseClicked(evt);
+                tblAppsDisplayMouseClicked(evt);
             }
         });
-        jScrollPane17.setViewportView(tblMailBoxDisplay);
-        if (tblMailBoxDisplay.getColumnModel().getColumnCount() > 0) {
-            tblMailBoxDisplay.getColumnModel().getColumn(0).setResizable(false);
-            tblMailBoxDisplay.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane17.setViewportView(tblAppsDisplay);
+        if (tblAppsDisplay.getColumnModel().getColumnCount() > 0) {
+            tblAppsDisplay.getColumnModel().getColumn(0).setResizable(false);
+            tblAppsDisplay.getColumnModel().getColumn(1).setResizable(false);
         }
 
-        tblMessageDisplay.setModel(new javax.swing.table.DefaultTableModel(
+        tblAppsActionsDisplay.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -892,16 +905,16 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblMessageDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblAppsActionsDisplay.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblMessageDisplayMouseClicked(evt);
+                //tblAppsActionsDisplayMouseClicked(evt);
             }
         });
-        jScrollPane8.setViewportView(tblMessageDisplay);
-        if (tblMessageDisplay.getColumnModel().getColumnCount() > 0) {
-            tblMessageDisplay.getColumnModel().getColumn(0).setResizable(false);
-            tblMessageDisplay.getColumnModel().getColumn(1).setResizable(false);
-            tblMessageDisplay.getColumnModel().getColumn(2).setResizable(false);
+        jScrollPane8.setViewportView(tblAppsActionsDisplay);
+        if (tblAppsActionsDisplay.getColumnModel().getColumnCount() > 0) {
+            tblAppsActionsDisplay.getColumnModel().getColumn(0).setResizable(false);
+            tblAppsActionsDisplay.getColumnModel().getColumn(1).setResizable(false);
+            tblAppsActionsDisplay.getColumnModel().getColumn(2).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
@@ -1042,9 +1055,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jTextArea9.setText("Each process requires a name that identifies it, there are no restrictions for it.\n\nIf you have chosen direct addressing, the processes are created independently, so you will see that the word \"None\" appears in the \nprocess table.\n\nIn case of having chosen indirect addressing, the processes must subscribe to one or more Mailboxes in order to be able to send \nmessages between processes. In case there are no Mailboxes created so far, you should proceed to create at least one, as shown\nin the section \"Add MailBox\".\n\nOnce you have written the name of the process and you have subscribed to a MailBox (if you selected this option), you must press the \nAdd button to create it. Then you will see it in the process table, with its corresponding ID and MailBox.");
         jScrollPane19.setViewportView(jTextArea9);
 
-        jLabel35.setText("Add MailBox");
+        jLabel35.setText("Add Application");
 
-        jLabel36.setText("Add Process");
+        jLabel36.setText("Add Printer");
 
         jTextArea10.setEditable(false);
         jTextArea10.setColumns(20);
@@ -1122,26 +1135,27 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jPanel15.setLayout(jPanel15Layout);
         jPanel15Layout.setHorizontalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGap(278, 278, 278)
+                .addComponent(jLabel39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel40)
+                .addGap(62, 62, 62))
+            .addGroup(jPanel15Layout.createSequentialGroup()
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel15Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane22, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel15Layout.createSequentialGroup()
-                        .addGap(369, 369, 369)
-                        .addComponent(jLabel38)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 325, Short.MAX_VALUE))
                     .addGroup(jPanel15Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane21))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel15Layout.createSequentialGroup()
-                        .addGap(278, 278, 278)
-                        .addComponent(jLabel39)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel40)))
-                .addGap(62, 62, 62))
+                        .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel15Layout.createSequentialGroup()
+                            .addGap(369, 369, 369)
+                            .addComponent(jLabel38))
+                        .addGroup(jPanel15Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane21, javax.swing.GroupLayout.PREFERRED_SIZE, 791, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1192,23 +1206,24 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane14, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel11Layout.createSequentialGroup()
-                            .addGap(381, 381, 381)
-                            .addComponent(jLabel25))
-                        .addGroup(jPanel11Layout.createSequentialGroup()
-                            .addGap(377, 377, 377)
-                            .addComponent(jLabel26))
-                        .addGroup(jPanel11Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel11Layout.createSequentialGroup()
-                                    .addGap(355, 355, 355)
-                                    .addComponent(jLabel27))
-                                .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 825, Short.MAX_VALUE)
-                                .addComponent(jScrollPane12)))))
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addGap(381, 381, 381)
+                        .addComponent(jLabel25))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addGap(377, 377, 377)
+                        .addComponent(jLabel26))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel11Layout.createSequentialGroup()
+                                .addGap(355, 355, 355)
+                                .addComponent(jLabel27))
+                            .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 825, Short.MAX_VALUE)
+                            .addComponent(jScrollPane12)))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 810, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel11Layout.setVerticalGroup(
@@ -1237,9 +1252,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(configTabs, javax.swing.GroupLayout.DEFAULT_SIZE, 820, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(configTabs, javax.swing.GroupLayout.DEFAULT_SIZE, 821, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1249,15 +1262,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void checkPanelAddMailBoxVisibility(){
-        
+    public void checkPanelAddMailBoxVisibility(){        
         panelAddProcess.setVisible(false);
 
     }
     
-    public void checkUploadFileVisibility(){
-        
-        btnRunChooseFile.setVisible(true);            
+    public void checkUploadFileVisibility(){        
+        btnInteractiveChooseFile.setVisible(true);            
 
     }
     
@@ -1266,10 +1277,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }                                        
 
     private void btnViewMailBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewMailBoxActionPerformed
-        int selectedRow = tblMailBoxDisplay.getSelectedRow();
-        String value = (String) tblMailBoxDisplay.getValueAt(selectedRow, 0);
-        DefaultTableModel suscribedTable = (DefaultTableModel) tblProcessDisplay.getModel();
-        DefaultTableModel messageTable = (DefaultTableModel) tblMailBoxDisplay.getModel();
+        int selectedRow = tblAppsDisplay.getSelectedRow();
+        String value = (String) tblAppsDisplay.getValueAt(selectedRow, 0);
+        DefaultTableModel suscribedTable = (DefaultTableModel) tblPrintersDisplay.getModel();
+        DefaultTableModel messageTable = (DefaultTableModel) tblAppsDisplay.getModel();
         suscribedTable.getDataVector().removeAllElements();
         messageTable.getDataVector().removeAllElements();
         for(MailBox mailbox: controlador.getMailBoxes()){
@@ -1285,9 +1296,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnViewMailBoxActionPerformed
 
     private void btnViewActionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionsActionPerformed
-        int selectedRow = tblProcessDisplay.getSelectedRow();
-        String value = (String) tblProcessDisplay.getValueAt(selectedRow, 0);
-        DefaultTableModel actionsTable = (DefaultTableModel) tblActionsDisplay.getModel();
+        int selectedRow = tblPrintersDisplay.getSelectedRow();
+        String value = (String) tblPrintersDisplay.getValueAt(selectedRow, 0);
+        DefaultTableModel actionsTable = (DefaultTableModel) tblPrintersActionsDisplay.getModel();
         actionsTable.getDataVector().removeAllElements();
         Proceso p = controlador.getProcess(value);
         for(MessageRecord record: p.recordHistory){
@@ -1296,15 +1307,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnViewActionsActionPerformed
 
     private void btnDisplayActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        configTabs.setSelectedIndex(3);
+        configTabs.setSelectedIndex(2);
         configTabs.setEnabledAt(0,false);
-        configTabs.setEnabledAt(1,false);
-        configTabs.setEnabledAt(2,true);
+        configTabs.setEnabledAt(1,true);
         configTabs.setEnabledAt(3,true);
         fillDisplayView();
     }                                          
 
-    private void btnChooseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseFileActionPerformed
+    private void btnBatchChooseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchChooseFileActionPerformed
         try {
             JFileChooser chooser = new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
@@ -1318,10 +1328,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         } catch (Exception e) {
             System.out.println("Error: no se pudo cargar el archivo");
         }
-    }//GEN-LAST:event_btnChooseFileActionPerformed
+    }//GEN-LAST:event_btnBatchChooseFileActionPerformed
 
     private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        Proceso p = controlador.getProcess(tableInteractiveProcessList.getValueAt(tableInteractiveProcessList.getSelectedRow(), 0).toString());
+        Proceso p = controlador.getProcess(tblInteractiveAppList.getValueAt(tblInteractiveAppList.getSelectedRow(), 0).toString());
         
         controlador.sendMessage(new Mensaje(Controller.messageIDCounter++, FILEPATH, p.getIdProceso(), p.getIdProceso()));
         refreshInteractiveTable();        
@@ -1347,7 +1357,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                               
 
-    private void btnRunChooseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunChooseFileActionPerformed
+    private void btnInteractiveChooseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInteractiveChooseFileActionPerformed
         try {
             JFileChooser chooser = new JFileChooser();
             int returnVal = chooser.showOpenDialog(null);
@@ -1357,7 +1367,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
                 if(controlador.getConfiguration().content.equals(Format_Content.IMAGE)){
                     try {
-                        ImagesExtension prueba = ImagesExtension.valueOf(tokens[1]);
+                        FilesExtension prueba = FilesExtension.valueOf(tokens[1]);
                         System.out.println("Archivo " + tokens[1] + " cargado correctamente");
                     } catch (IllegalArgumentException ex) {
                         JOptionPane.showMessageDialog(null, "Error: Format " + tokens[1] + " not admited", "Invalid format", 0);
@@ -1367,11 +1377,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error: File can't be charged ", "File Error", 0);
         }
-    }//GEN-LAST:event_btnRunChooseFileActionPerformed
+    }//GEN-LAST:event_btnInteractiveChooseFileActionPerformed
 
     private void btnReceiveMessageActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
-        Proceso p = controlador.getProcess(tableInteractiveProcessList.getValueAt(tableInteractiveProcessList.getSelectedRow(), 0).toString());
+        Proceso p = controlador.getProcess(tblInteractiveAppList.getValueAt(tblInteractiveAppList.getSelectedRow(), 0).toString());
 
         //controlador.receiveMessage(p.getIdProceso(), cboSourceList.getSelectedItem().toString());
         refreshInteractiveTable();
@@ -1389,8 +1399,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     
     private void tableInteractiveProcessListMouseClicked(java.awt.event.MouseEvent evt) {                                                         
         // TODO add your handling code here:
-        btnSendMessage.setEnabled(true);
-        btnReceiveMessage.setEnabled(true);
+        btnPrintRequest.setEnabled(true);
+        btnPrintNext.setEnabled(true);
         //fillSendNReceiveComboBox(controlador.getConfiguration().getAddressing(), tableInteractiveProcessList.getValueAt(tableInteractiveProcessList.getSelectedRow(), 0).toString());
     }        
     
@@ -1400,15 +1410,14 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             if(controlador.getMailBoxes().size()<1){
                 return false;
             }
-        }               
+        }
         return true;
     }
 
     private void btnGoToRunActionPerformed(java.awt.event.ActionEvent evt) {                                           
         if(isOkToStart()){        
-            configTabs.setSelectedIndex(2);
+            configTabs.setSelectedIndex(1);
             configTabs.setEnabledAt(0,false);
-            configTabs.setEnabledAt(1,false);
             configTabs.setEnabledAt(2,true);
             configTabs.setEnabledAt(3,true);
             checkUploadFileVisibility();
@@ -1433,10 +1442,10 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         return false;
     }
     
-    private void btnAddProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProcessActionPerformed
-        if(!txfProcessID.getText().isEmpty()){
+    private void btnAddPrinterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPrinterActionPerformed
+        if(!txfPrinterName.getText().isEmpty()){
             
-                DefaultTableModel modelo = (DefaultTableModel)tableProcess.getModel();
+                DefaultTableModel modelo = (DefaultTableModel)tblPrintersNames.getModel();
                 Addressing addressing = controlador.getConfiguration().getAddressing();
                 ArrayList<MailBox> mailboxes = controlador.getMailBoxes();
                 MailBox selectedMailBox = null;
@@ -1446,12 +1455,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     selectedMailBox = mail;
                 }
                 
-                Proceso nuevoProceso  = new Proceso(txfProcessID.getText());                
+                Proceso nuevoProceso  = new Proceso(txfPrinterName.getText());                
                 
                 controlador.addProcess(nuevoProceso);
 
                 // Si el addressing es directo solo se necesita el PID y se agrega
-                    modelo.addRow(new Object[]{txfProcessID.getText(),"None"});
+                    modelo.addRow(new Object[]{txfPrinterName.getText(),"None"});
                 
                     if(addressing.equals(Addressing.DYNAMIC)){
                         selectedMailBox.getSuscritos().add(nuevoProceso);
@@ -1461,18 +1470,18 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     }
                     //JOptionPane.showMessageDialog(null, "MailBox: " + selectedMailBox.getIdMailBox() + " tiene " + String.valueOf(selectedMailBox.getSuscritos().size()) + " procesos", "Mensaje", 1);
                 
-                txfProcessID.setText("");
-                tableProcess.setModel(modelo);
+                txfPrinterName.setText("");
+                tblPrintersNames.setModel(modelo);
             
         }else{
             JOptionPane.showMessageDialog(null,  "PID can't be empty", "Null PID Error", 0);
         }        
-        txfProcessID.requestFocus();
-    }//GEN-LAST:event_btnAddProcessActionPerformed
+        txfPrinterName.requestFocus();
+    }//GEN-LAST:event_btnAddPrinterActionPerformed
 
     private void BatchAddProcessActionPerformed(String processName,String mailboxName) {                                              
         if(!(processName == null)){            
-                DefaultTableModel modelo = (DefaultTableModel)tableProcess.getModel();
+                DefaultTableModel modelo = (DefaultTableModel)tblPrintersNames.getModel();
                 Addressing addressing = controlador.getConfiguration().getAddressing();
                 ArrayList<MailBox> mailboxes = controlador.getMailBoxes();
                 MailBox selectedMailBox = null;
@@ -1496,26 +1505,26 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         //JOptionPane.showMessageDialog(null, "MailBox: " + selectedMailBox.getIdMailBox() + " tiene " + String.valueOf(selectedMailBox.getSuscritos().size()) + " procesos", "Mensaje", 1);
                     
                 
-                txfProcessID.setText("");
-                tableProcess.setModel(modelo);
+                txfPrinterName.setText("");
+                tblPrintersNames.setModel(modelo);
             
         }else{
             JOptionPane.showMessageDialog(null,  "PID can't be empty", "Null PID Error", 0);
         }
         
-        txfProcessID.requestFocus();
+        txfPrinterName.requestFocus();
     }
-    private void btnAddMailBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMailBoxActionPerformed
+    private void btnAddApplicationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddApplicationActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel modelo = (DefaultTableModel)tableMailBox.getModel();
+        DefaultTableModel modelo = (DefaultTableModel)tblAppNames.getModel();
 
-        if(!txfMailBoxID.getText().isEmpty()){
-            if(!existsMBID(txfMailBoxID.getText())){
-                controlador.addMailBox(new MailBox(txfMailBoxID.getText(), Integer.valueOf(spinMaxNoMessages.getValue().toString())));
+        if(!txfApplicationName.getText().isEmpty()){
+            if(!existsMBID(txfApplicationName.getText())){
+                controlador.addMailBox(new MailBox(txfApplicationName.getText(), Integer.valueOf(spinAppPriority.getValue().toString())));
 
-                modelo.addRow(new Object[]{txfMailBoxID.getText(),spinMaxNoMessages.getValue().toString()});
+                modelo.addRow(new Object[]{txfApplicationName.getText(),spinAppPriority.getValue().toString()});
 
-                tableMailBox.setModel(modelo);
+                tblAppNames.setModel(modelo);
 
                 panelAddProcess.setVisible(true);
                 //cboSubscribeToMailBox.insertItemAt(txfMailBoxID.getText(), cboSubscribeToMailBox.getItemCount());//mail.getIdMailBox(), cboSubscribeToMailBox.getItemCount());
@@ -1526,13 +1535,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(null, "MBID can't be empty", "Null MBID Error", 0);
         }
-        txfMailBoxID.setText("");
-        txfMailBoxID.requestFocus();
+        txfApplicationName.setText("");
+        txfApplicationName.requestFocus();
         
-    }//GEN-LAST:event_btnAddMailBoxActionPerformed
+    }//GEN-LAST:event_btnAddApplicationActionPerformed
 
     private void BatchAddMailBoxActionPerformed(String mailBoxName, int mailBoxCapacity) {
-        DefaultTableModel modelo = (DefaultTableModel)tableMailBox.getModel();
+        DefaultTableModel modelo = (DefaultTableModel)tblAppNames.getModel();
 
         if(!(mailBoxName == null)){
             if(!existsMBID(mailBoxName)){
@@ -1540,7 +1549,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
                 modelo.addRow(new Object[]{mailBoxName,mailBoxCapacity});
 
-                tableMailBox.setModel(modelo);
+                tblAppNames.setModel(modelo);
 
                 panelAddProcess.setVisible(true);
                 //cboSubscribeToMailBox.insertItemAt(mailBoxName, cboSubscribeToMailBox.getItemCount());//mail.getIdMailBox(), cboSubscribeToMailBox.getItemCount());
@@ -1551,39 +1560,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(null, "MBID can't be empty", "Null MBID Error", 0);
         }
-        txfMailBoxID.setText("");
-        txfMailBoxID.requestFocus();
+        txfApplicationName.setText("");
+        txfApplicationName.requestFocus();
         
     } 
     
-    private void txfMailBoxIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfMailBoxIDActionPerformed
+    private void txfApplicationNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfApplicationNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txfMailBoxIDActionPerformed
+    }//GEN-LAST:event_txfApplicationNameActionPerformed
     
     private void btnGenerateConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateConfigActionPerformed
-        // TODO add your handling code here:
-        Sync_Receive receive;
-        Sync_Send send;
-        Addressing addressing = null;
-        Format_Content content;
-        Format_Length length;
-        MailBox_Discipline discipline;
-
-        send = Sync_Send.NON_BLOCKING;
-        receive = Sync_Receive.TEST_FOR_ARRIVAL;
-        length = Format_Length.VARIABLE;
-        discipline = MailBox_Discipline.PRIORITY;
-        content = Format_Content.valueOf("IMAGE");
-        addressing = Addressing.DYNAMIC;
-
-        //JOptionPane.showMessageDialog(null, "Receive: " + receive.toString() + "\n Send: " + send.toString() + "\n Addressing: " + addressing.toString() + "\n Content: " + content.toString() + "\n Length: " + length.toString() + "\n Discipline: " + discipline.toString(), "Resumen de variables", 1);
-
-        controlador.setConfiguration(receive, send, addressing, content, length, discipline);
-        checkPanelAddMailBoxVisibility();
-        configTabs.setSelectedIndex(1);
-        configTabs.setEnabledAt(0,false);
-        configTabs.setEnabledAt(2,false);
-        configTabs.setEnabledAt(3,true);
+        // TODO add your handling code here:        
     }//GEN-LAST:event_btnGenerateConfigActionPerformed
 
     private void rdbtnQueueingDisciplinePriorityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnQueueingDisciplinePriorityActionPerformed
@@ -1612,7 +1599,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     
     void refreshInteractiveTable(){
-       DefaultTableModel modelo = (DefaultTableModel) tableInteractiveProcessList.getModel();
+       DefaultTableModel modelo = (DefaultTableModel) tblInteractiveAppList.getModel();
        modelo.getDataVector().removeAllElements();
        for(Proceso proceso: controlador.getProcesses()){
            //change if it is receiven or sending
@@ -1621,19 +1608,19 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }
     
     void fillRunView(){
-       DefaultTableModel modelo = (DefaultTableModel) tableInteractiveProcessList.getModel();
+       DefaultTableModel modelo = (DefaultTableModel) tblInteractiveAppList.getModel();
        for(Proceso proceso: controlador.getProcesses()){
            modelo.addRow(new Object[]{proceso.getIdProceso(), "Running", false});
        }
     }
     
     void fillDisplayView(){
-        DefaultTableModel processTable = (DefaultTableModel) tblProcessDisplay.getModel();
+        DefaultTableModel processTable = (DefaultTableModel) tblPrintersDisplay.getModel();
         processTable.getDataVector().removeAllElements();        
         for(Proceso proceso: controlador.getProcesses()){
             processTable.addRow(new Object[]{proceso.getIdProceso(), "Running", false});
         } 
-        DefaultTableModel mailBoxtable = (DefaultTableModel) tblMailBoxDisplay.getModel();       
+        DefaultTableModel mailBoxtable = (DefaultTableModel) tblAppsDisplay.getModel();       
         mailBoxtable.getDataVector().removeAllElements();        
         for(MailBox mailbox: controlador.getMailBoxes()){
             mailBoxtable.addRow(new Object[]{mailbox.getIdMailBox(), mailbox.cantidadMensajesMaxima-mailbox.bufferMensajes.size(), false});                      
@@ -1658,9 +1645,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
     private void tblProcessDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProcessIDMouseClicked
         // TODO add your handling code here:
-        int selectedRow = tblProcessDisplay.getSelectedRow();
-        String value = (String) tblProcessDisplay.getValueAt(selectedRow, 0); 
-        DefaultTableModel actionsTable = (DefaultTableModel) tblActionsDisplay.getModel();        
+        int selectedRow = tblPrintersDisplay.getSelectedRow();
+        String value = (String) tblPrintersDisplay.getValueAt(selectedRow, 0); 
+        DefaultTableModel actionsTable = (DefaultTableModel) tblPrintersActionsDisplay.getModel();        
         actionsTable.getDataVector().removeAllElements();
         Proceso p = controlador.getProcess(value);
         for(MessageRecord record: p.recordHistory){
@@ -1669,26 +1656,26 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         clearMessageInformation();
     }//GEN-LAST:event_tblProcessIDMouseClicked
 
-    private void tblActionsDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActionsDisplayMouseClicked
+    private void tblPrintersActionsDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPrintersActionsDisplayMouseClicked
         // TODO add your handling code here:
-        Proceso process = controlador.getProcess(tblProcessDisplay.getValueAt(tblProcessDisplay.getSelectedRow(), 0).toString());
-        Mensaje message = process.getRecordHistory().get(tblActionsDisplay.getSelectedRow()).getMessage();
+        Proceso process = controlador.getProcess(tblPrintersDisplay.getValueAt(tblPrintersDisplay.getSelectedRow(), 0).toString());
+        Mensaje message = process.getRecordHistory().get(tblPrintersActionsDisplay.getSelectedRow()).getMessage();
         showMessageInformation(message);
-    }//GEN-LAST:event_tblActionsDisplayMouseClicked
+    }//GEN-LAST:event_tblPrintersActionsDisplayMouseClicked
 
-    private void tblMailBoxDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMailBoxDisplayMouseClicked
+    private void tblAppsDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAppsDisplayMouseClicked
         // TODO add your handling code here:
-        MailBox mailbox = controlador.getMailBoxes().get(tblMailBoxDisplay.getSelectedRow());
-        Mensaje message = mailbox.getBufferMensajes().get(tblMailBoxDisplay.getSelectedRow());
+        MailBox mailbox = controlador.getMailBoxes().get(tblAppsDisplay.getSelectedRow());
+        Mensaje message = mailbox.getBufferMensajes().get(tblAppsDisplay.getSelectedRow());
         showMessageInformation(message);
-    }//GEN-LAST:event_tblMailBoxDisplayMouseClicked
+    }//GEN-LAST:event_tblAppsDisplayMouseClicked
 
     private void tblMessageDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMailBoxMouseClicked
         // TODO add your handling code here:
-        int selectedRow = tblMailBoxDisplay.getSelectedRow();
-        String value = (String) tblMailBoxDisplay.getValueAt(selectedRow, 0); 
-        DefaultTableModel suscribedTable = (DefaultTableModel) tblProcessDisplay.getModel();
-        DefaultTableModel messageTable = (DefaultTableModel) tblMailBoxDisplay.getModel();        
+        int selectedRow = tblAppsDisplay.getSelectedRow();
+        String value = (String) tblAppsDisplay.getValueAt(selectedRow, 0); 
+        DefaultTableModel suscribedTable = (DefaultTableModel) tblPrintersDisplay.getModel();
+        DefaultTableModel messageTable = (DefaultTableModel) tblAppsDisplay.getModel();        
         suscribedTable.getDataVector().removeAllElements();
         messageTable.getDataVector().removeAllElements();        
         for(MailBox mailbox: controlador.getMailBoxes()){
@@ -1704,38 +1691,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         clearMessageInformation();
     }//GEN-LAST:event_tblMailBoxMouseClicked
 
-    //private void tblProcessDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProcessDisplayMouseClicked
+    //private void tblPrintersDisplayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPrintersDisplayMouseClicked
         // TODO add your handling code here:
         //clearMessageInformation();
-    //}//GEN-LAST:event_tblProcessDisplayMouseClicked
+    //}//GEN-LAST:event_tblPrintersDisplayMouseClicked
 
-    private void btnMailBoxDisciplineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMailBoxDisciplineActionPerformed
-        JOptionPane.showMessageDialog(null, "FIFO: The first messages to be sent will be the first messages to be received." + "\n" + "\n" + "Priority: Messages with a higher priority value will be received faster.", "MailBox Discipline", 1);
-    }//GEN-LAST:event_btnMailBoxDisciplineActionPerformed
-
-    private void btnFormalLenghrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormalLenghrActionPerformed
-        JOptionPane.showMessageDialog(null, "Variable: messages of any size are sent." + "\n" + "\n" + "Fixed: Only messages that have a size less than or equal to the one established by the user will be sent. Those who exceed the limit will not be sent.", "Format-Lenght", 1);
-    }//GEN-LAST:event_btnFormalLenghrActionPerformed
-
-    private void btnFormatContentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormatContentActionPerformed
-        JOptionPane.showMessageDialog(null, "Text: You can only send text messages written in the space for that purpose." + "\n" + "\n" + "Audio: You can only send audio messages selected from a computer directory. Allowed extensions: mp3, MP3, wma, WMA, midi, MIDI, opus, OPUS, aiff, AIFF." + "\n" + "\n" + "Image: You can only send image messages selected from a computer directory. Allowed extensions: jpg, jpg, jpeg, jpeg, png, png, bmp, bmp, gif, gif." + "\n" + "\n" + "Video: You can only send video messages selected from a computer directory. Allowed extensions: MP4, MP4, WMV, WMV, AMV, AMV, MPG, MPG, MPEG, MPEG, AVI, AVI.", "Format-Content", 1);
-    }//GEN-LAST:event_btnFormatContentActionPerformed
-
-    private void btnAdresIndirectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdresIndirectActionPerformed
-        JOptionPane.showMessageDialog(null, "They use the MailBox." + "\n" + "\n" + "Static: a MailBox can receive messages from various processes, but can only deliver them to one receiving process." + "\n" + "\n" + "Dynamic: a MailBox can receive messages from several processes and can deliver them to several receiving processes.", "Addressing-Indirect", 1);
-    }//GEN-LAST:event_btnAdresIndirectActionPerformed
-
-    private void btnAdressDiectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdressDiectActionPerformed
-        JOptionPane.showMessageDialog(null, "Explicit: the sending process knows exactly to which process the message is sent. The receiving process knows exactly from which process receives the message. Before the sent is done." + "\n" + "\n" + "Implicit: the sending process sends a message, but does not know who will receive it. The receiving process knows that it will receive a message, but does not know where it comes from." + "\n" + "Once the message is received, each of the processes knows who the sender was and who was the receiver.", "Addressing-Direct", 1);
-    }//GEN-LAST:event_btnAdressDiectActionPerformed
-
-    private void btnSyncroSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSyncroSendActionPerformed
-        JOptionPane.showMessageDialog(null, "Blocking: the sending process is blocked until the receiving process sends the confirmation that the message was received." + "\n" + "\n" + "Non-Blocking: the sending process is never blocked even if the process that receives has not sent any acknowledgment of receipt.", "Synchronization-Send", 1);
-    }//GEN-LAST:event_btnSyncroSendActionPerformed
-
-    private void btnSyncroReceiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSyncroReceiveActionPerformed
-        JOptionPane.showMessageDialog(null, "Blocking: If the receiving process asks for a message and it has not arrived, then the process is blocked waiting until it arrives." + "\n" + "\n" + "Non-Blocking: the receiving process is never blocked, even when the message it waits for has not arrived." + "\n" + "\n" + "Test for Arrival: Coming Soon.", "Synchronization-Receive", 1);
-    }//GEN-LAST:event_btnSyncroReceiveActionPerformed
 
     private void ParamToBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ParamToBatchActionPerformed
     
@@ -1755,7 +1715,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         configTabs.setEnabledAt(3,true);
     }//GEN-LAST:event_ObjectsRestartActionPerformed
 
-    private void BatchExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BatchExecuteActionPerformed
+    private void btnExecuteBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BatchExecuteActionPerformed
         Sync_Receive receive;
         Sync_Send send;
         Addressing addressing = null;
@@ -1781,16 +1741,12 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }        
         
-        send = (config.get(0).equals("Send:Blocking"))?Sync_Send.BLOCKING:Sync_Send.NON_BLOCKING;
+        send = Sync_Send.NON_BLOCKING;
         receive = Sync_Receive.TEST_FOR_ARRIVAL;
         length = Format_Length.VARIABLE;
-        discipline = (config.get(5).equals("MailBox:FIFO"))?MailBox_Discipline.FIFO:MailBox_Discipline.PRIORITY; 
-         
-
-            addressing = Addressing.DYNAMIC;
-        
-
-            content = Format_Content.IMAGE;
+        discipline = (config.get(5).equals("MailBox:FIFO"))?MailBox_Discipline.FIFO:MailBox_Discipline.PRIORITY;          
+        addressing = Addressing.DYNAMIC;
+        content = Format_Content.IMAGE;
 
         JOptionPane.showMessageDialog(null, "Receive: " + receive.toString() + "\n Send: " + send.toString() + "\n Addressing: " + addressing.toString() + "\n Content: " + content.toString() + "\n Length: " + length.toString() + " : " + lengthNumber + "\n Discipline: " + discipline.toString(), "Resumen de variables", 1);
 
@@ -1874,16 +1830,16 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAddMailBox;
-    private javax.swing.JButton btnAddProcess;
-    private javax.swing.JButton btnChooseFile;
+    private javax.swing.JButton btnAddApplication;
+    private javax.swing.JButton btnAddPrinter;
+    private javax.swing.JButton btnBatchChooseFile;
     private javax.swing.JButton btnDisplay;
     private javax.swing.JButton btnExecuteBatch;
     private javax.swing.JButton btnGoToRun;
-    private javax.swing.JButton btnReceiveMessage;
-    private javax.swing.JButton btnReceiveMessage1;
-    private javax.swing.JButton btnRunChooseFile;
-    private javax.swing.JButton btnSendMessage;
+    private javax.swing.JButton btnInteractiveChooseFile;
+    private javax.swing.JButton btnPrintAll;
+    private javax.swing.JButton btnPrintNext;
+    private javax.swing.JButton btnPrintRequest;
     private javax.swing.JButton btnSystemReset;
     private javax.swing.ButtonGroup btngrpAddressing;
     private javax.swing.ButtonGroup btngrpFormatLength;
@@ -1892,7 +1848,6 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.ButtonGroup btngrpSincronizacionReceive;
     private javax.swing.ButtonGroup btngrpSincronizacionSend;
     private javax.swing.JTabbedPane configTabs;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
@@ -1967,22 +1922,22 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblSubscribeToMailBox2;
     private javax.swing.JPanel panelAddMailBox;
     private javax.swing.JPanel panelAddProcess;
+    private javax.swing.JSpinner spinAppPriority;
+    private javax.swing.JSpinner spinAppQueue;
     private javax.swing.JSpinner spinBatchLines;
-    private javax.swing.JSpinner spinMaxNoMessages;
-    private javax.swing.JSpinner spinMaxNoMessages1;
-    private javax.swing.JSpinner spinMaxNoMessages2;
-    private javax.swing.JSpinner spinMaxNoMessages3;
+    private javax.swing.JSpinner spinPrinterPriority;
+    private javax.swing.JSpinner spinPrinterQueue;
     private javax.swing.JPanel startTab3;
-    private javax.swing.JTable tableInteractiveProcessList;
-    private javax.swing.JTable tableMailBox;
-    private javax.swing.JTable tableProcess;
-    private javax.swing.JTable tblActionsDisplay;
-    private javax.swing.JTable tblMailBoxDisplay;
-    private javax.swing.JTable tblMessageDisplay;
-    private javax.swing.JTable tblProcessDisplay;
+    private javax.swing.JTable tblAppNames;
+    private javax.swing.JTable tblAppsActionsDisplay;
+    private javax.swing.JTable tblAppsDisplay;
+    private javax.swing.JTable tblInteractiveAppList;
+    private javax.swing.JTable tblPrintersActionsDisplay;
+    private javax.swing.JTable tblPrintersDisplay;
+    private javax.swing.JTable tblPrintersNames;
     private javax.swing.JTextArea txaShowMessageContent;
-    private javax.swing.JTextField txfMailBoxID;
-    private javax.swing.JTextField txfProcessID;
+    private javax.swing.JTextField txfApplicationName;
+    private javax.swing.JTextField txfPrinterName;
     private javax.swing.JPanel variableTabPanel1;
     // End of variables declaration//GEN-END:variables
 }

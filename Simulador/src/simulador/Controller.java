@@ -58,7 +58,7 @@ public class Controller {
     }
     
     public void receiveMessage(String sourceID, String destinationID){
-        Proceso sender = getProcess(destinationID); //NO SE SABE SI SIRVE EN MAILBOX
+        Proceso sender = getProcess(destinationID);
         Proceso receiver = getProcess(sourceID);
         
         
@@ -68,12 +68,7 @@ public class Controller {
                 Mensaje message = getMessageFromMailBox(sourceID, destinationID);
                 sender = getProcess(message.getSourceID());
                 System.out.println("Was the received message null? " + String.valueOf(message == null));
-                
-                if(configs.getSend().equals(Sync_Send.BLOCKING)){ // Hay q desbloquear el sender y quitar el sending
-                    removeRequest(message, Request_Action.ACCUSEMENT);
-                    sender.setBlocking(false);
-                }
-                
+                               
                 receiver.setReceiving(false);
                 receiver.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
             }
@@ -99,7 +94,7 @@ public class Controller {
         if(isThereAnAccusementRequest(destinationID, sourceID))
             return true;
         
-         if(getMailBox(destinationID).getBufferMensajes().size()> 0)
+        if(getMailBox(destinationID).getBufferMensajes().size()> 0)
             return true;
         
         return false;
@@ -123,9 +118,7 @@ public class Controller {
             }
         }
         return pickedMessage;
-    }
-  
-    
+    }     
     
     private boolean isThereAnAccusementRequest(String sourceID, String destinationID){
         Request req = null;
@@ -195,22 +188,17 @@ public class Controller {
         }
     }
     
-    public void sendMessage(Mensaje mensaje){ // Abarca tanto addressing direct como indirect
-        boolean directAddressing = (Addressing.EXPLICIT.equals(configs.getAddressing()) || Addressing.IMPLICIT.equals(configs.getAddressing()));
-        
+    public void sendMessage(Mensaje mensaje){ // Abarca tanto addressing direct como indirect        
         getProcess(mensaje.getSourceID()).getRecordHistory().add(new MessageRecord(Record_Message_Action.SENT, mensaje));
         
         if(messageWasExpected(mensaje)){
-            JOptionPane.showMessageDialog(null, "This message was expected", "Information", 1);
-            
+            JOptionPane.showMessageDialog(null, "This message was expected", "Information", 1);            
             
             Proceso procesoDestino = null;
-            if(directAddressing){
-                procesoDestino = getProcess(getRequestFromSource(mensaje.getDestinationID()).getSourceID());
-            }else{
+            
                 procesoDestino = getDestinationProcessFromIndirectAddressing(mensaje);
                 System.out.println("Proceso destino: " + procesoDestino.getIdProceso());
-            }    
+                
                 
             procesoDestino.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, mensaje));
             if(configs.receive.equals(Sync_Receive.TEST_FOR_ARRIVAL)){
@@ -219,23 +207,13 @@ public class Controller {
             
             removeRequest(mensaje, Request_Action.RECEIVE);   
         }else{  // El msj por enviar no estaba siendo esperado
-            if (Addressing.EXPLICIT.equals(configs.getAddressing()) || Addressing.IMPLICIT.equals(configs.getAddressing())){
-                systemMailBox.add(mensaje);
-                System.out.println("Mensaje de: " + systemMailBox.get(systemMailBox.indexOf(mensaje)).getSourceID() + " de para: "+ systemMailBox.get(systemMailBox.indexOf(mensaje)).getDestinationID());
-            }
-            else{ // Addressing indirecto
+
+
                 System.out.println("Message sent to MailBox: " + getMailBox(mensaje.getDestinationID()).getIdMailBox());
                 getMailBox(mensaje.getDestinationID()).addMessage(mensaje); 
-            }
-            if(configs.send.equals(Sync_Send.BLOCKING)){ // Si al enviar hay send BLOCKING hay que bloquear el proceso y hacer un ACCUSEMENT request
-                String sourceID = mensaje.sourceID;
-                Proceso toBlock = getProcess(sourceID);
-                toBlock.setBlocking(true);
-                // VERIFICAR QUE ESTE ORDEN ESTÉ CORRECTO
-                requests.add(new Request(sourceID, mensaje.getDestinationID(), Request_Action.ACCUSEMENT));
-            }
+            
         } System.out.println("Requests now: " + requests.size());
-    }   // </ sendMessage(...)>
+    }
     
     
     private Proceso getDestinationProcessFromIndirectAddressing(Mensaje message){
@@ -265,20 +243,14 @@ public class Controller {
         if (requests.isEmpty())
             return false;
         else{
-            // Si viene de Addressing directo
-            if (Addressing.EXPLICIT.equals(configs.getAddressing()) || Addressing.IMPLICIT.equals(configs.getAddressing())){
-                for(Request request: requests){
-                    if(request.getAction().equals(Request_Action.RECEIVE) && request.getSourceID().equals(message.getDestinationID()) && request.getDestinationID().equals(message.getSourceID()))
-                        return true;
-                }
-            }else{ //Si viene de addressing indirecto
+             //Si viene de addressing indirecto
                 System.out.println("Indirect message evaluation for expected message or not");
                 for(Request request: requests){
                     System.out.println("Request source: " + request.getSourceID() + " destination: "+ request.getDestinationID() + " action: " + request.getAction().toString());
                     if(request.getAction().equals(Request_Action.RECEIVE) && request.getDestinationID().equals(message.getDestinationID()))
                         return true;
                 }
-            }
+            
             return false;
         }
     }

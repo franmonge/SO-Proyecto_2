@@ -61,6 +61,7 @@ public class MailBox {
 
     @Override
     public String toString() {
-        return "MailBox{" + "idMailBox=" + idMailBox + ", privacidad="  + ", suscritos=" + suscritos + '}';
+        return "MailBox{" + "idMailBox=" + idMailBox + ", cantidadMensajesMaxima=" + cantidadMensajesMaxima + ", suscritos=" + suscritos + ", bufferMensajes=" + bufferMensajes + '}';
     }
+    
 }

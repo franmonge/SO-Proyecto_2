@@ -6,6 +6,6 @@
 package Config_Enums;
 
 
-public enum ImagesExtension {
+public enum FilesExtension {
     jpg, JPG, jpeg, JPEG, png, PNG
 }

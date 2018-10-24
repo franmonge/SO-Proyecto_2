@@ -112,6 +112,14 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         tabpNavigator.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -876,6 +884,27 @@ public class VentanaImpresion extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnSendMessageActionPerformed
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            // TODO add your handling code here:
+            removePrintersFolders();
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaImpresion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    void removePrintersFolders() throws IOException{
+        for(MailBox printer: controlador.getMailBoxes()){
+            String directoryPath = System.getProperty("user.dir")+"/"+printer.getIdMailBox();
+            System.out.println("Directory to be deleted: " + directoryPath);
+            FileUtils.deleteDirectory(new File(directoryPath));
+        }
+    }
+    
     void refreshRunView(){
         cboSourceApp.removeAllItems();
         cboDestinationPrinter.removeAllItems();

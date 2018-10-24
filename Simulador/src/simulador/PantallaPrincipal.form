@@ -107,7 +107,7 @@
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="panelAddProcess" pref="555" max="32767" attributes="0"/>
+                                  <Component id="panelAddProcess" pref="557" max="32767" attributes="0"/>
                                   <Component id="panelAddMailBox" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -504,7 +504,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel3" pref="445" max="32767" attributes="0"/>
+                          <Component id="jPanel3" pref="447" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="btnSystemReset" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -1508,7 +1508,7 @@
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jScrollPane23" pref="97" max="32767" attributes="0"/>
+                              <Component id="jScrollPane23" max="32767" attributes="0"/>
                               <Component id="jScrollPane22" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>

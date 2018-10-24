@@ -15,15 +15,21 @@ public class Proceso {
     Boolean blocking;
     Boolean busy;
     ArrayList<MessageRecord> recordHistory; 
+    Integer priority;
 
-    public Proceso(String idProceso) {
+    public Proceso(String idProceso, Integer priority) {
         this.idProceso = idProceso;
-        this.sending = false;
-        this.receiving = false;
-        this.blocking = false;
-        this.busy = false;
+        this.priority = priority;
         recordHistory = new ArrayList<MessageRecord>(); 
 
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public Integer getPriority() {
+        return priority;
     }
 
     public String getIdProceso() {

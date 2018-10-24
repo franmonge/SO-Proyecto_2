@@ -51,7 +51,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         content = Format_Content.valueOf("IMAGE");
         addressing = Addressing.DYNAMIC;
 
-        controlador.setConfiguration(receive, send, addressing, content, length, discipline);
+        controlador.setConfiguration(receive, send, addressing, content, length, discipline, null, 0);
         //checkPanelAddMailBoxVisibility();
         
         configTabs.setEnabledAt(1,false);
@@ -1333,7 +1333,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {                                               
         Proceso p = controlador.getProcess(tblInteractiveAppList.getValueAt(tblInteractiveAppList.getSelectedRow(), 0).toString());
         
-        controlador.sendMessage(new Mensaje(Controller.messageIDCounter++, FILEPATH, p.getIdProceso(), p.getIdProceso()));
+        controlador.sendMessage(new Mensaje(Controller.messageIDCounter++, FILEPATH, p.getIdProceso(), p.getIdProceso(), -1));
         refreshInteractiveTable();        
     }                                              
 
@@ -1346,7 +1346,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 long largo = -1;  //en caso de que LENGHT sea VARIABLE lo toma como -1.
 
 
-                controlador.sendMessage(new Mensaje(Controller.messageIDCounter++, FILEPATH, send.getIdProceso(), receiver));
+                controlador.sendMessage(new Mensaje(Controller.messageIDCounter++, FILEPATH, send.getIdProceso(), receiver, -1));
                     
                 refreshInteractiveTable();
             }
@@ -1455,7 +1455,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                     selectedMailBox = mail;
                 }
                 
-                Proceso nuevoProceso  = new Proceso(txfPrinterName.getText());                
+                Proceso nuevoProceso  = new Proceso(txfPrinterName.getText(), -1);                
                 
                 controlador.addProcess(nuevoProceso);
 
@@ -1491,7 +1491,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                         selectedMailBox = mail;
                 }
                 
-                Proceso nuevoProceso  = new Proceso(processName);  
+                Proceso nuevoProceso  = new Proceso(processName, -1);  
                 controlador.addProcess(nuevoProceso);
 
                 // Si el addressing es directo solo se necesita el PID y se agrega
@@ -1750,7 +1750,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
 
         JOptionPane.showMessageDialog(null, "Receive: " + receive.toString() + "\n Send: " + send.toString() + "\n Addressing: " + addressing.toString() + "\n Content: " + content.toString() + "\n Length: " + length.toString() + " : " + lengthNumber + "\n Discipline: " + discipline.toString(), "Resumen de variables", 1);
 
-        controlador.setConfiguration(receive, send, addressing, content, length, discipline);
+        controlador.setConfiguration(receive, send, addressing, content, length, discipline, null, 0);
         
         //Aca ya esta la configuracion cargada e inicia creacion de procesos y envio de mensajes
         config.clear();

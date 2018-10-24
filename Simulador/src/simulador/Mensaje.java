@@ -11,12 +11,22 @@ public class Mensaje {
     String path;
     String sourceID;
     String destinationID;
+    Integer priority;
 
-    public Mensaje(Integer idMensaje, String texto, String sourceID, String destinationID) {
+    public Mensaje(Integer idMensaje, String texto, String sourceID, String destinationID, Integer priority) {
         this.idMensaje = idMensaje;
         this.path = texto;
         this.sourceID = sourceID;
         this.destinationID = destinationID;
+        this.priority = priority;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public void setSourceID(String sourceID) {

@@ -13,8 +13,8 @@ public class Simulador {
      */
     public static void main(String[] args) {
         
-        PantallaPrincipal ventanaPrincipal = new PantallaPrincipal();
-        ventanaPrincipal.setVisible(true);
+        VentanaImpresion ventana = new VentanaImpresion();
+        ventana.setVisible(true);
         
     }
 }

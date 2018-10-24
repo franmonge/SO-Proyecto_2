@@ -9,6 +9,7 @@ import Config_Enums.Addressing;
 import Config_Enums.Format_Content;
 import Config_Enums.Format_Length;
 import Config_Enums.MailBox_Discipline;
+import Config_Enums.Priority;
 import Config_Enums.Record_Message_Action;
 import Config_Enums.Request_Action;
 import Config_Enums.Sync_Receive;
@@ -21,6 +22,7 @@ public class Controller {
     private static Controller instance = null;
     private Configuration configs;
     private ArrayList<Proceso> procesos;
+    private ArrayList<Proceso> suscritores;
     private ArrayList<MailBox> mailboxes;
     private ArrayList<Mensaje> systemMailBox;
     private ArrayList<Request> requests;
@@ -28,6 +30,7 @@ public class Controller {
     
     private Controller(){
         procesos = new ArrayList<Proceso>();
+        suscritores = new ArrayList<Proceso>();
         mailboxes = new ArrayList<MailBox>();
         requests = new ArrayList<Request>();
         systemMailBox = new ArrayList<Mensaje>();
@@ -61,33 +64,15 @@ public class Controller {
         Proceso sender = getProcess(destinationID);
         Proceso receiver = getProcess(sourceID);
         
-        
-            if(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
-                System.out.println("Existing message on MailBox to be delivered");
-                
-                Mensaje message = getMessageFromMailBox(sourceID, destinationID);
-                sender = getProcess(message.getSourceID());
-                System.out.println("Was the received message null? " + String.valueOf(message == null));
-                               
-                receiver.setReceiving(false);
-                receiver.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
-            }
-            else{ // No hay un msj pendiente por recibir, entonces hay que hacer un request
-                if(configs.getReceive().equals(Sync_Receive.NON_BLOCKING)){
-                    // Excepto si es Non-Blocking -> No pasa nada
-                }else{
-                    System.out.println("Receive Non-Blocking should not reach this point");
-                    requests.add(new Request(sourceID, destinationID, Request_Action.RECEIVE));
-                    receiver.setReceiving(Boolean.TRUE);
-                    if(configs.getReceive().equals(Sync_Receive.TEST_FOR_ARRIVAL))
-                        receiver.setBusy(true);
-                }
-            }        
-        System.out.println("Requests now: " + requests.size());
-        System.out.println("Request summary");
-        for(Request req: requests)
-            System.out.println("Req SOURCEID: " + req.getSourceID() + " DESTINATIONID: " + req.getDestinationID() + " TYPE: " +req.getAction().toString());
-        System.out.println("Receiver buffer size: " + String.valueOf(receiver.getRecordHistory().size()));
+        if(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
+            System.out.println("Existing message on MailBox to be delivered");
+
+            Mensaje message = getMessageFromMailBox(sourceID, destinationID);
+            sender = getProcess(message.getSourceID());
+            System.out.println("Was the received message null? " + String.valueOf(message == null));
+            
+            receiver.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
+        }
     }
     
     private boolean isThereAPendingMessageOnMailBox(String destinationID, String sourceID){
@@ -190,29 +175,8 @@ public class Controller {
     
     public void sendMessage(Mensaje mensaje){ // Abarca tanto addressing direct como indirect        
         getProcess(mensaje.getSourceID()).getRecordHistory().add(new MessageRecord(Record_Message_Action.SENT, mensaje));
-        
-        if(messageWasExpected(mensaje)){
-            JOptionPane.showMessageDialog(null, "This message was expected", "Information", 1);            
-            
-            Proceso procesoDestino = null;
-            
-                procesoDestino = getDestinationProcessFromIndirectAddressing(mensaje);
-                System.out.println("Proceso destino: " + procesoDestino.getIdProceso());
-                
-                
-            procesoDestino.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, mensaje));
-            if(configs.receive.equals(Sync_Receive.TEST_FOR_ARRIVAL)){
-                procesoDestino.setBusy(false);
-            }
-            
-            removeRequest(mensaje, Request_Action.RECEIVE);   
-        }else{  // El msj por enviar no estaba siendo esperado
-
-
-                System.out.println("Message sent to MailBox: " + getMailBox(mensaje.getDestinationID()).getIdMailBox());
-                getMailBox(mensaje.getDestinationID()).addMessage(mensaje); 
-            
-        } System.out.println("Requests now: " + requests.size());
+        System.out.println("Message sent to MailBox: " + getMailBox(mensaje.getDestinationID()).getIdMailBox());
+        getMailBox(mensaje.getDestinationID()).addMessage(mensaje);  // Add MessageRecord
     }
     
     
@@ -271,16 +235,28 @@ public class Controller {
         return null;
     }
     
-    public void setConfiguration(Sync_Receive receive, Sync_Send send, Addressing addressing, Format_Content content, Format_Length length, MailBox_Discipline discipline){
-        configs = new Configuration(receive, send, addressing, content, length, discipline);
+    public void setConfiguration(Sync_Receive receive, Sync_Send send, Addressing addressing, Format_Content content, Format_Length length, MailBox_Discipline discipline, Priority priority, Integer bufferSize){
+        configs = new Configuration(receive, send, addressing, content, length, discipline, priority, bufferSize);
     }
     
     public Configuration getConfiguration(){
         return configs;
     }
+
+    public ArrayList<Proceso> getSuscritores() {
+        return suscritores;
+    }
     
     public void addProcess(Proceso process){
         procesos.add(process);
+    }
+    
+    public void addSubscriber(Proceso subscriber){
+        suscritores.add(subscriber);
+    }
+    
+    public void subscribeProcess(MailBox mail, Proceso suscritor){
+        mailboxes.get(mailboxes.indexOf(mail)).getSuscritos().add(suscritor);
     }
     
     public ArrayList<Proceso> getProcesses(){

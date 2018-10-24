@@ -12,9 +12,14 @@ import Config_Enums.MailBox_Discipline;
 import Config_Enums.Priority;
 import Config_Enums.Sync_Receive;
 import Config_Enums.Sync_Send;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -29,6 +34,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
      * Creates new form VentanaImpresion
      */
     public VentanaImpresion() {
+        System.out.println("Path del sistema: "+System.getProperty("user.dir"));
         controlador = Controller.getInstance();
         messagePath = "";
         batchFilePath = "";
@@ -106,6 +112,14 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         tabpNavigator.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -763,7 +777,11 @@ public class VentanaImpresion extends javax.swing.JFrame {
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         // TODO add your handling code here:
-        
+        MailBox mail = controlador.getMailBox(cboPrinter.getSelectedItem().toString());
+        Proceso subscriber = mail.getSuscritos().get(0);
+        Mensaje message = controlador.receiveMessage(subscriber.getIdProceso(), mail.getIdMailBox());
+        if(message != null)
+            controlador.printMessage(mail, message);
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void btnDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplayActionPerformed
@@ -787,7 +805,6 @@ public class VentanaImpresion extends javax.swing.JFrame {
         }
     }
     
-    
     private void btnAddPrinterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPrinterActionPerformed
         // TODO add your handling code here:
         Integer bufferSize = controlador.getConfiguration().getBufferSize();
@@ -799,6 +816,19 @@ public class VentanaImpresion extends javax.swing.JFrame {
         controlador.addSubscriber(subscriber);
         
         refreshTableAddPrinter();
+        
+        txfAddPrinter.setText("");
+        txfAddPrinter.requestFocus();
+        
+        
+        File dir = new File(name);
+        dir.mkdir(); // crea la carpeta de la impresora
+        File log = new File(name+"/log.txt"); // este seria el archivo dentro de la carpeta para el log
+        try {
+            FileUtils.writeStringToFile(log, "", "UTF-8"); //aca se crea el log
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaImpresion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnAddPrinterActionPerformed
 
     void refreshTableAddPrinter(){
@@ -854,6 +884,27 @@ public class VentanaImpresion extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnSendMessageActionPerformed
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            // TODO add your handling code here:
+            removePrintersFolders();
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaImpresion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    void removePrintersFolders() throws IOException{
+        for(MailBox printer: controlador.getMailBoxes()){
+            String directoryPath = System.getProperty("user.dir")+"/"+printer.getIdMailBox();
+            System.out.println("Directory to be deleted: " + directoryPath);
+            FileUtils.deleteDirectory(new File(directoryPath));
+        }
+    }
+    
     void refreshRunView(){
         cboSourceApp.removeAllItems();
         cboDestinationPrinter.removeAllItems();

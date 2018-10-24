@@ -14,8 +14,13 @@ import Config_Enums.Record_Message_Action;
 import Config_Enums.Request_Action;
 import Config_Enums.Sync_Receive;
 import Config_Enums.Sync_Send;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FileUtils;
+
 
 
 public class Controller {
@@ -60,32 +65,52 @@ public class Controller {
         return mail.getCantidadMensajesMaxima()-mail.getBufferMensajes().size();
     }
     
-    public void receiveMessage(String sourceID, String destinationID){
-        Proceso sender = getProcess(destinationID);
+    public void sendMessage(Mensaje mensaje){ // Abarca tanto addressing direct como indirect        
+        getProcess(mensaje.getSourceID()).getRecordHistory().add(new MessageRecord(Record_Message_Action.SENT, mensaje));
+        System.out.println("Message sent to MailBox: " + getMailBox(mensaje.getDestinationID()).getIdMailBox());
+        getMailBox(mensaje.getDestinationID()).addMessage(mensaje);  // Add MessageRecord
+    }
+    
+    public Mensaje receiveMessage(String sourceID, String destinationID){
         Proceso receiver = getProcess(sourceID);
-        
+        Mensaje message = null;
         if(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
             System.out.println("Existing message on MailBox to be delivered");
 
-            Mensaje message = getMessageFromMailBox(sourceID, destinationID);
-            sender = getProcess(message.getSourceID());
+            message = getMessageFromMailBox(sourceID, destinationID);
+            Proceso sender = getProcess(message.getSourceID());
             System.out.println("Was the received message null? " + String.valueOf(message == null));
             
-            receiver.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
+            //receiver.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
         }
+        return message;
+    }
+    
+    public void printMessage(MailBox mail, Mensaje message){
+        //FileUtils.writeStringToFile(File file, String data, String encoding)  para escribir en el log
+        System.out.println("A message is about to be printed");
+        String fileName = message.getPath().split("/")[message.getPath().split("/").length-1];
+        System.out.println("File name: "+ fileName);//Arrays.toString(pathPieces));
+        File source = new File(message.getPath());
+        File dest = new File(System.getProperty("user.dir")+"/"+mail.getIdMailBox()+"/"+fileName);
+        
+        try {
+            //FileUtils.copyFileToDirectory(source, dest); no necesitaria el nombre del archivo
+            FileUtils.copyFile(source, dest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
     
     private boolean isThereAPendingMessageOnMailBox(String destinationID, String sourceID){
-        if(isThereAnAccusementRequest(destinationID, sourceID))
-            return true;
-        
         if(getMailBox(destinationID).getBufferMensajes().size()> 0)
             return true;
         
         return false;
     }
     
-    private Mensaje getMessageFromMailBox(String sourceID, String destinationID){
+    private Mensaje getMessageFromMailBox(String sourceID, String destinationID){ // Actualizar por prioridad
         Mensaje pickedMessage = null;
         MailBox mail = getMailBox(destinationID);
         
@@ -105,120 +130,6 @@ public class Controller {
         return pickedMessage;
     }     
     
-    private boolean isThereAnAccusementRequest(String sourceID, String destinationID){
-        Request req = null;
-        for(Request request: requests){
-            if(request.getDestinationID().equals(sourceID) && request.getSourceID().equals(destinationID)  && request.getAction() == Request_Action.ACCUSEMENT) {    
-                req = request;
-            }
-        }
-        if(req != null)
-            return true;
-        return false;
-    }
-    
-    private boolean isThereAPendingMessageOnSystemMailBox(String destinationID, String sourceID){
-        if(isThereAnAccusementRequest(destinationID, sourceID)){
-            System.out.println("There's a accusement request for this receive request");
-            return true;
-        }
-        
-        for(Mensaje mensaje: systemMailBox)
-            if(mensaje.getDestinationID().equals(sourceID) && mensaje.getSourceID().equals(destinationID)){
-                //System.out.println("The requested message already exists in the system mailbox");
-                return true;
-            }
-        
-        if(configs.getAddressing().equals(Addressing.IMPLICIT)){
-            for(Mensaje mensaje: systemMailBox)
-                if(mensaje.getDestinationID().equals(sourceID)){
-                    System.out.println("IMPLICIT: The requested message already exists in the system mailbox");
-                    return true;
-                }
-        }        
-        return false;
-    }
-    
-    private void removeRequest(Mensaje mensaje, Request_Action action){
-        if(requests.size() > 0){
-            Request toBeDeleted = null;
-            boolean directAddressing = (Addressing.EXPLICIT.equals(configs.getAddressing()) || Addressing.IMPLICIT.equals(configs.getAddressing()));
-            for(Request request: requests){
-                if(directAddressing){
-                    if(request.getSourceID().equals(mensaje.getDestinationID()) && request.getDestinationID().equals(mensaje.getSourceID()) && request.getAction() == action){
-                        System.out.println("Request to be deleted sourceID: "+ request.getSourceID() + " destinationID: "+ request.getDestinationID() + " type: " + request.getAction().toString());
-                        toBeDeleted = request;//requests.remove(request);
-                        break;
-                    }
-                    if(action == Request_Action.ACCUSEMENT){
-                        if(request.getSourceID().equals(mensaje.getSourceID()) && request.getDestinationID().equals(mensaje.getDestinationID()) && request.getAction() == action){
-                            System.out.println("Request to be deleted sourceID: "+ request.getSourceID() + " destinationID: "+ request.getDestinationID() + " type: " + request.getAction().toString());
-                            toBeDeleted = request;//requests.remove(request);
-                        }       
-                    }
-                }
-                else{ // Indirect addressing
-                    if(request.getDestinationID().equals(mensaje.getDestinationID()) && request.getAction().equals(action)){
-                        System.out.println("Request to be deleted sourceID: "+ request.getSourceID() + " destinationID: "+ request.getDestinationID() + " type: " + request.getAction().toString());
-                        toBeDeleted = request;//requests.remove(request);
-                    }
-                }
-            }
-            if(toBeDeleted != null){
-                requests.remove(toBeDeleted);
-                System.out.println("Request summary");
-                for(Request req: requests)
-                    System.out.println("Req SOURCEID: " + req.getSourceID() + " DESTINATIONID: " + req.getDestinationID() + " TYPE: " +req.getAction().toString());
-            }
-        }
-    }
-    
-    public void sendMessage(Mensaje mensaje){ // Abarca tanto addressing direct como indirect        
-        getProcess(mensaje.getSourceID()).getRecordHistory().add(new MessageRecord(Record_Message_Action.SENT, mensaje));
-        System.out.println("Message sent to MailBox: " + getMailBox(mensaje.getDestinationID()).getIdMailBox());
-        getMailBox(mensaje.getDestinationID()).addMessage(mensaje);  // Add MessageRecord
-    }
-    
-    
-    private Proceso getDestinationProcessFromIndirectAddressing(Mensaje message){
-        Proceso process = null;
-        for(Request req: requests){
-            if(req.getDestinationID().equals(message.getDestinationID()) && req.getAction().equals(Request_Action.RECEIVE)){
-                process = getProcess(req.getSourceID());
-            }
-        }
-        return process;
-    }
-    
-    private Proceso getSourceProcessFromIndirectAddressing(Mensaje message){
-        return getProcess(message.getSourceID());
-    }
-    
-    private Request getRequestFromSource(String destinationID){
-        for(Request request: requests){
-            if(request.getSourceID().equals(destinationID)){
-                return request;
-            }
-        }
-        return null;
-    }
-    
-    private boolean messageWasExpected(Mensaje message){
-        if (requests.isEmpty())
-            return false;
-        else{
-             //Si viene de addressing indirecto
-                System.out.println("Indirect message evaluation for expected message or not");
-                for(Request request: requests){
-                    System.out.println("Request source: " + request.getSourceID() + " destination: "+ request.getDestinationID() + " action: " + request.getAction().toString());
-                    if(request.getAction().equals(Request_Action.RECEIVE) && request.getDestinationID().equals(message.getDestinationID()))
-                        return true;
-                }
-            
-            return false;
-        }
-    }
-
     public MailBox getMailBox(String mailBoxID){
         for(MailBox mail: mailboxes){
             if (mailBoxID.equals(mail.getIdMailBox()))

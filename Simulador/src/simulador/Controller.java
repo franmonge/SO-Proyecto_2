@@ -74,6 +74,7 @@ public class Controller {
         String appPriority = "Application Priority: " + String.valueOf(getProcess(record.getMessage().getSourceID()).getPriority());
         String content = "\n--------------------------------------------\n"
                         + "Message MODIFY \n" 
+                        + "Message: " + record.getMessage().getIdMensaje() + "\n"
                         + "File: " + record.getMessage().getPath() + "\n"
                         + "Timestamp: " + record.getTimeStamp() + "\n"
                         + "From Application: " + record.getMessage().getSourceID() + "\n";
@@ -110,24 +111,40 @@ public class Controller {
         MessageRecord record = new MessageRecord(Record_Message_Action.RECEIVED, mensaje);
         getMailBox(mensaje.getDestinationID()).getPrinterRecord().add(record);
         logAction(record);
+        messageIDCounter++;
+    }
+    
+    public void receiveAllMessage(String sourceID, String destinationID){
+        Mensaje message = null;
+        MailBox mail = getMailBox(destinationID);
+        if(isThereAPendingMessageOnMailBox(destinationID, sourceID))
+            while(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
+                System.out.println("Existing message on MailBox to be delivered");
+                message = getMessageFromMailBox(sourceID, destinationID);
+                System.out.println("Was the received message null? " + String.valueOf(message == null));
+
+                printMessage(mail, message);
+                MessageRecord record = new MessageRecord(Record_Message_Action.PRINTED, message);
+                mail.getPrinterRecord().add(record);
+                mail.getBufferMensajes().remove(message);
+                logAction(record);
+            }
+        else
+            JOptionPane.showMessageDialog(null, "The printer's buffer is empty", "Print info", 2);
     }
     
     public void receiveMessage(String sourceID, String destinationID){
-        Proceso receiver = getProcess(sourceID);
         Mensaje message = null;
         MailBox mail = getMailBox(destinationID);
         if(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
             System.out.println("Existing message on MailBox to be delivered");
-
             message = getMessageFromMailBox(sourceID, destinationID);
-            //Proceso sender = getProcess(message.getSourceID());
             System.out.println("Was the received message null? " + String.valueOf(message == null));
             
-            //receiver.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
-        
             printMessage(mail, message);
             MessageRecord record = new MessageRecord(Record_Message_Action.PRINTED, message);
             mail.getPrinterRecord().add(record);
+            mail.getBufferMensajes().remove(message);
             logAction(record);
         }else{
             JOptionPane.showMessageDialog(null, "Printer's buffer is empty", "Print info", 2);

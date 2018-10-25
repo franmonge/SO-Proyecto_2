@@ -1282,9 +1282,15 @@ public class VentanaImpresion extends javax.swing.JFrame {
         model2.getDataVector().removeAllElements();
         MailBox mail = controlador.getMailBox(tblPrintersList.getValueAt(tblPrintersList.getSelectedRow(), 0).toString());
         
-        for(Mensaje message: mail.getBufferMensajes()){
+        for(Mensaje message: mail.getBufferMensajes())
             model2.addRow(new Object[]{message.getIdMensaje(), message.getPath(), message.getSourceID(), message.getDestinationID(), message.getPriority()});
-        }
+        
+        tblApplicationRecords.setVisible(false); tblApplicationRecords.setVisible(true);
+        DefaultTableModel model3 = (DefaultTableModel) tblApplicationRecords.getModel();
+        model3.getDataVector().removeAllElements();
+        Proceso suscritor = mail.getSuscritos().get(0);
+        for(MessageRecord record: suscritor.getRecordHistory())
+            model3.addRow(new Object[]{record.getAction(), record.getMessage().getIdMensaje(), record.getTimeStamp()});
         
     }//GEN-LAST:event_tblPrintersListMouseClicked
 

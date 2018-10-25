@@ -138,13 +138,19 @@ public class Controller {
         MailBox mail = getMailBox(destinationID);
         if(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
             System.out.println("Existing message on MailBox to be delivered");
+            
             message = getMessageFromMailBox(sourceID, destinationID);
             System.out.println("Was the received message null? " + String.valueOf(message == null));
             
+            mail.getSuscritos().get(0).getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
+            
             printMessage(mail, message);
+            
             MessageRecord record = new MessageRecord(Record_Message_Action.PRINTED, message);
+            
             mail.getPrinterRecord().add(record);
             mail.getBufferMensajes().remove(message);
+            
             logAction(record);
         }else{
             JOptionPane.showMessageDialog(null, "Printer's buffer is empty", "Print info", 2);
@@ -206,6 +212,12 @@ public class Controller {
             if (mailBoxID.equals(mail.getIdMailBox()))
                 return mail;
         }
+        return null;
+    }
+    public Proceso getSubscriber(String processID){
+        for(Proceso proceso: suscritores)
+            if(proceso.getIdProceso().equals(processID))
+                return proceso;
         return null;
     }
     

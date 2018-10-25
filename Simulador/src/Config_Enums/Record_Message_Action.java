@@ -7,5 +7,5 @@ package Config_Enums;
 
 
 public enum Record_Message_Action {
-    RECEIVED, SENT
+    RECEIVED, SENT, PRINTED
 }

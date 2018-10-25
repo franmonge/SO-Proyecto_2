@@ -13,12 +13,22 @@ public class MailBox {
     int cantidadMensajesMaxima;
     ArrayList<Proceso> suscritos; 
     ArrayList<Mensaje> bufferMensajes;
+    ArrayList<MessageRecord> printerRecord;
     
     public MailBox(String idMailBox, int cantidadMensajesMaxima) {
         this.idMailBox = idMailBox;
         this.cantidadMensajesMaxima = cantidadMensajesMaxima;
         this.suscritos = new ArrayList<Proceso>();
-        bufferMensajes = new ArrayList<Mensaje>();
+        this.bufferMensajes = new ArrayList<Mensaje>();
+        this.printerRecord = new ArrayList<MessageRecord>();
+    }
+
+    public ArrayList<MessageRecord> getPrinterRecord() {
+        return printerRecord;
+    }
+
+    public void setPrinterRecord(ArrayList<MessageRecord> printerRecord) {
+        this.printerRecord = printerRecord;
     }
 
     public String getIdMailBox() {

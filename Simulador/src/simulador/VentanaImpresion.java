@@ -779,9 +779,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
         // TODO add your handling code here:
         MailBox mail = controlador.getMailBox(cboPrinter.getSelectedItem().toString());
         Proceso subscriber = mail.getSuscritos().get(0);
-        Mensaje message = controlador.receiveMessage(subscriber.getIdProceso(), mail.getIdMailBox());
-        if(message != null)
-            controlador.printMessage(mail, message);
+        controlador.receiveMessage(subscriber.getIdProceso(), mail.getIdMailBox());
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void btnDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplayActionPerformed

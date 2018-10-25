@@ -71,9 +71,10 @@ public class Controller {
         getMailBox(mensaje.getDestinationID()).addMessage(mensaje);  // Add MessageRecord
     }
     
-    public Mensaje receiveMessage(String sourceID, String destinationID){
+    public void receiveMessage(String sourceID, String destinationID){
         Proceso receiver = getProcess(sourceID);
         Mensaje message = null;
+        MailBox mail = getMailBox(destinationID);
         if(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
             System.out.println("Existing message on MailBox to be delivered");
 
@@ -83,7 +84,7 @@ public class Controller {
             
             //receiver.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
         }
-        return message;
+        printMessage(mail, message);
     }
     
     public void printMessage(MailBox mail, Mensaje message){
@@ -99,14 +100,12 @@ public class Controller {
             FileUtils.copyFile(source, dest);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        
+        }   
     }
     
     private boolean isThereAPendingMessageOnMailBox(String destinationID, String sourceID){
         if(getMailBox(destinationID).getBufferMensajes().size()> 0)
             return true;
-        
         return false;
     }
     

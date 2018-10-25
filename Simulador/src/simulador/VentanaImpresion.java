@@ -12,12 +12,16 @@ import Config_Enums.MailBox_Discipline;
 import Config_Enums.Priority;
 import Config_Enums.Sync_Receive;
 import Config_Enums.Sync_Send;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.io.FileUtils;
 
@@ -29,6 +33,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
     Controller controlador;
     String messagePath;
     String batchFilePath;
+    public static BufferedReader BUFFERREADER;
     
     /**
      * Creates new form VentanaImpresion
@@ -610,11 +615,21 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jLabel14.setText("Batch instruction execution");
 
         btnLoadBatchFile.setText("Load batch file");
+        btnLoadBatchFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadBatchFileActionPerformed(evt);
+            }
+        });
 
         jLabel15.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel15.setText("Execute n lines");
 
         btnExecuteNLinesBatch.setText("Execute");
+        btnExecuteNLinesBatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExecuteNLinesBatchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
@@ -782,6 +797,13 @@ public class VentanaImpresion extends javax.swing.JFrame {
         controlador.receiveMessage(subscriber.getIdProceso(), mail.getIdMailBox());
     }//GEN-LAST:event_btnPrintActionPerformed
 
+    private void batchPrintActionPerformed(String name) {                                         
+        // TODO add your handling code here:
+        MailBox mail = controlador.getMailBox(name);
+        Proceso subscriber = mail.getSuscritos().get(0);
+        controlador.receiveMessage(subscriber.getIdProceso(), mail.getIdMailBox());
+    }
+    
     private void btnDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplayActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDisplayActionPerformed
@@ -829,6 +851,31 @@ public class VentanaImpresion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAddPrinterActionPerformed
 
+    private void BatchAddPrinterActionPerformed(String name) {                                              
+        // TODO add your handling code here:
+        Integer bufferSize = controlador.getConfiguration().getBufferSize();
+        MailBox mail = new MailBox(name, bufferSize);
+        Proceso subscriber = new Proceso(name+"Subscriber", -1);
+        controlador.addMailBox(mail);
+        controlador.subscribeProcess(mail, subscriber);
+        controlador.addSubscriber(subscriber);
+        
+        refreshTableAddPrinter();
+        
+        txfAddPrinter.setText("");
+        txfAddPrinter.requestFocus();
+        
+        
+        File dir = new File(name);
+        dir.mkdir(); // crea la carpeta de la impresora
+        File log = new File(name+"/log.txt"); // este seria el archivo dentro de la carpeta para el log
+        try {
+            FileUtils.writeStringToFile(log, "", "UTF-8"); //aca se crea el log
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaImpresion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     void refreshTableAddPrinter(){
         DefaultTableModel model = (DefaultTableModel)tblAddPrinter.getModel();
         model.getDataVector().removeAllElements();
@@ -881,7 +928,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
         txaFilePath.setText("");
         
     }//GEN-LAST:event_btnSendMessageActionPerformed
-
+    
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
     }//GEN-LAST:event_formWindowClosed
@@ -894,6 +941,96 @@ public class VentanaImpresion extends javax.swing.JFrame {
             Logger.getLogger(VentanaImpresion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void btnExecuteNLinesBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExecuteNLinesBatchActionPerformed
+        // TODO add your handling code here:       
+        String linea;
+        int lineCounter = 1;
+        ArrayList<String> config = new ArrayList<String>();        
+        try {
+            while((linea = BUFFERREADER.readLine()) != null){    //Las primeras 2 lineas del txt son de configuracion
+                if(lineCounter <= 2){
+                    config.add(linea);
+                    lineCounter++;
+                }
+                else
+                    break;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        
+        String[] arrOfStr = null;
+        arrOfStr = config.get(0).split(":", 2);
+        Integer bufferSize = Integer.parseInt(arrOfStr[1]); 
+        arrOfStr = config.get(1).split(":", 2);
+        Priority priority = (arrOfStr[1].equals(Priority.PROCESS))?Priority.PROCESS:Priority.MESSAGE;        
+        controlador.setConfiguration(Sync_Receive.NON_BLOCKING, Sync_Send.NON_BLOCKING, Addressing.STATIC, Format_Content.IMAGE, Format_Length.VARIABLE, MailBox_Discipline.PRIORITY, priority, bufferSize);     
+        
+        JOptionPane.showMessageDialog(null, "\n BufferSize: " + bufferSize + "\n Priority: " + priority, "Configuration", 1);
+        tabpNavigator.setSelectedIndex(1);
+        
+        //Aca ya esta la configuracion cargada e inicia creacion de procesos y envio de mensajes
+        config.clear();
+        try {
+            while((linea = BUFFERREADER.readLine()) != null){
+                //Las primeras 2 lineas del txt son de configuracio
+                if(lineCounter > 2){
+                    if(linea.contains("CreatePrinter")){
+                        arrOfStr = linea.split(":",2);
+                        BatchAddPrinterActionPerformed(arrOfStr[1]);
+                        System.out.println("Printer created: " + arrOfStr[1]);
+                    }
+                    if(linea.contains("CreateApp")){
+                        arrOfStr = linea.split(":",3);
+                        controlador.addProcess(new Proceso(arrOfStr[1], Integer.parseInt(arrOfStr[2])));
+                        refreshTableAddApp();
+                        System.out.println("App created: " + arrOfStr[1] + " : " + arrOfStr[2]);
+                    }
+                    if(linea.contains("Send")){
+                        arrOfStr = linea.split(":",5);
+                        Integer idCounter = controlador.messageIDCounter;
+                        controlador.sendMessage(new Mensaje(idCounter, "C:" + arrOfStr[3], arrOfStr[1], arrOfStr[2], Integer.parseInt(arrOfStr[4])));
+                        System.out.println("Message send: " + arrOfStr[1] + " a " + arrOfStr[2] + " Msj: " + "C:" + arrOfStr[3] + " Prioridad: " + arrOfStr[4]);
+                    }
+                    if(linea.contains("Receive")){
+                        arrOfStr = linea.split(":",2);                        
+                        batchPrintActionPerformed(arrOfStr[1]);
+                        System.out.println("Message printed: " + arrOfStr[1] + " a " );
+                    }
+                    lineCounter++;
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        refreshRunView();
+        //Revisar si es necesario mostrar todo lo de interactivo para cuando es por BATCH.
+//        if(isOkToStart()){
+//            checkUploadFileVisibility();
+//            fillRunView();
+//            checkDisciplinePriority();
+//            checkImplicitAddressingView();
+//        }
+    }//GEN-LAST:event_btnExecuteNLinesBatchActionPerformed
+
+    private void btnLoadBatchFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadBatchFileActionPerformed
+        // TODO add your handling code here:
+        try {
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+            chooser.setFileFilter(filter);
+            int returnVal = chooser.showOpenDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                String entrada = chooser.getSelectedFile().getPath();
+                BUFFERREADER = new BufferedReader(new FileReader(entrada));
+                System.out.println("Archivo .txt cargado correctamente");                
+            }
+        } catch (Exception e) {
+            System.out.println("Error: no se pudo cargar el archivo");
+        }
+    }//GEN-LAST:event_btnLoadBatchFileActionPerformed
 
     void removePrintersFolders() throws IOException{
         for(MailBox printer: controlador.getMailBoxes()){

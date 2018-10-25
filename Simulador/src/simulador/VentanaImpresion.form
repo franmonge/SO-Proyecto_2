@@ -956,6 +956,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Load batch file"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoadBatchFileActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JSpinner" name="spinNLinesBatch">
                 </Component>
@@ -971,6 +974,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Execute"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExecuteNLinesBatchActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

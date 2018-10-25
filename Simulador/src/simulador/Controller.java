@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Pattern;
+import javax.smartcardio.ATR;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FileUtils;
 
@@ -90,10 +92,15 @@ public class Controller {
     public void printMessage(MailBox mail, Mensaje message){
         //FileUtils.writeStringToFile(File file, String data, String encoding)  para escribir en el log
         System.out.println("A message is about to be printed");
-        String fileName = message.getPath().split("/")[message.getPath().split("/").length-1];
+        String separator = "\\";
+        String[] str_arr = message.getPath().replaceAll(Pattern.quote(separator), "\\\\").split("\\\\");
+        //String[] path = message.getPath().split("");
+        //String fileName = path[path.length-1];
+        String fileName = str_arr[str_arr.length-1];
         System.out.println("File name: "+ fileName);//Arrays.toString(pathPieces));
         File source = new File(message.getPath());
         File dest = new File(System.getProperty("user.dir")+"/"+mail.getIdMailBox()+"/"+fileName);
+        System.out.println(System.getProperty("user.dir") + fileName);
         
         try {
             //FileUtils.copyFileToDirectory(source, dest); no necesitaria el nombre del archivo

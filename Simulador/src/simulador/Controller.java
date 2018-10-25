@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FileUtils;
 
@@ -65,26 +67,96 @@ public class Controller {
         return mail.getCantidadMensajesMaxima()-mail.getBufferMensajes().size();
     }
     
+    void logAction(MessageRecord record){
+        File logPath = new File(System.getProperty("user.dir")+"/"+record.getMessage().getDestinationID()+"/log.txt");
+        System.out.println("Log path: " + logPath);
+        String filePriority = "File Priority: " + record.getMessage().getPriority();
+        String appPriority = "Application Priority: " + String.valueOf(getProcess(record.getMessage().getSourceID()).getPriority());
+        String content = "\n--------------------------------------------\n"
+                        + "Message MODIFY \n" 
+                        + "Message: " + record.getMessage().getIdMensaje() + "\n"
+                        + "File: " + record.getMessage().getPath() + "\n"
+                        + "Timestamp: " + record.getTimeStamp() + "\n"
+                        + "From Application: " + record.getMessage().getSourceID() + "\n";
+        if(configs.getPriority().equals(Priority.MESSAGE)){
+            content+= filePriority;
+        }else{
+            content+= appPriority;
+        }
+        content+= "\n--------------------------------------------\n";
+        
+        if(record.getAction() == Record_Message_Action.RECEIVED){
+            
+            try {
+                FileUtils.writeStringToFile(logPath, content.replace("MODIFY", "Received"), "UTF-8", true);
+            } catch (IOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        if(record.getAction() == Record_Message_Action.PRINTED){
+            
+            try {
+                FileUtils.writeStringToFile(logPath, content.replace("MODIFY", "Printed"), "UTF-8", true);
+            } catch (IOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     public void sendMessage(Mensaje mensaje){ // Abarca tanto addressing direct como indirect        
         getProcess(mensaje.getSourceID()).getRecordHistory().add(new MessageRecord(Record_Message_Action.SENT, mensaje));
         System.out.println("Message sent to MailBox: " + getMailBox(mensaje.getDestinationID()).getIdMailBox());
         getMailBox(mensaje.getDestinationID()).addMessage(mensaje);  // Add MessageRecord
+        MessageRecord record = new MessageRecord(Record_Message_Action.RECEIVED, mensaje);
+        getMailBox(mensaje.getDestinationID()).getPrinterRecord().add(record);
+        logAction(record);
+        messageIDCounter++;
+    }
+    
+    public void receiveAllMessage(String sourceID, String destinationID){
+        Mensaje message = null;
+        MailBox mail = getMailBox(destinationID);
+        if(isThereAPendingMessageOnMailBox(destinationID, sourceID))
+            while(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
+                System.out.println("Existing message on MailBox to be delivered");
+                message = getMessageFromMailBox(sourceID, destinationID);
+                System.out.println("Was the received message null? " + String.valueOf(message == null));
+
+                printMessage(mail, message);
+                MessageRecord record = new MessageRecord(Record_Message_Action.PRINTED, message);
+                mail.getPrinterRecord().add(record);
+                mail.getBufferMensajes().remove(message);
+                logAction(record);
+            }
+        else
+            JOptionPane.showMessageDialog(null, "The printer's buffer is empty", "Print info", 2);
     }
     
     public void receiveMessage(String sourceID, String destinationID){
-        Proceso receiver = getProcess(sourceID);
         Mensaje message = null;
         MailBox mail = getMailBox(destinationID);
         if(isThereAPendingMessageOnMailBox(destinationID, sourceID)){
             System.out.println("Existing message on MailBox to be delivered");
-
+            
             message = getMessageFromMailBox(sourceID, destinationID);
-            Proceso sender = getProcess(message.getSourceID());
             System.out.println("Was the received message null? " + String.valueOf(message == null));
             
-            //receiver.getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
+            mail.getSuscritos().get(0).getRecordHistory().add(new MessageRecord(Record_Message_Action.RECEIVED, message));
+            
+            printMessage(mail, message);
+            
+            MessageRecord record = new MessageRecord(Record_Message_Action.PRINTED, message);
+            
+            mail.getPrinterRecord().add(record);
+            mail.getBufferMensajes().remove(message);
+            
+            logAction(record);
+        }else{
+            JOptionPane.showMessageDialog(null, "Printer's buffer is empty", "Print info", 2);
         }
-        printMessage(mail, message);
+        
+        
     }
     
     public void printMessage(MailBox mail, Mensaje message){
@@ -110,21 +182,27 @@ public class Controller {
     }
     
     private Mensaje getMessageFromMailBox(String sourceID, String destinationID){ // Actualizar por prioridad
-        Mensaje pickedMessage = null;
         MailBox mail = getMailBox(destinationID);
+        Mensaje pickedMessage = mail.getBufferMensajes().get(0);
         
-        if(mail.getBufferMensajes().size() > 0){ 
-            pickedMessage = mail.getBufferMensajes().get(0);
-            if(configs.getDiscipline().equals(MailBox_Discipline.FIFO)){
-                mail.getBufferMensajes().remove(0);
-            }else{ // Priority
-                for(Mensaje message: mail.getBufferMensajes()){
-                    //if(message.getPrioridad() > pickedMessage.getPrioridad()){
-                        pickedMessage = message;
-                    //}
-                }
-                mail.getBufferMensajes().remove(pickedMessage);
-            }
+        if(mail.getBufferMensajes().size() > 0){
+           if(configs.getPriority().equals(Priority.MESSAGE)){
+               for(Mensaje message: mail.getBufferMensajes()){
+                   if(message.getPriority() > pickedMessage.getPriority()){
+                       pickedMessage = message;
+                   }
+               }
+               
+           }else{ // Prioridad por aplicacion
+               for(Mensaje message: mail.getBufferMensajes()){
+                   Proceso current = getProcess(pickedMessage.getSourceID());
+                   Proceso checking = getProcess(message.getSourceID());
+                   
+                   if(checking.getPriority() > current.getPriority()){
+                       pickedMessage = message;
+                   }
+               }
+           } 
         }
         return pickedMessage;
     }     
@@ -134,6 +212,12 @@ public class Controller {
             if (mailBoxID.equals(mail.getIdMailBox()))
                 return mail;
         }
+        return null;
+    }
+    public Proceso getSubscriber(String processID){
+        for(Proceso proceso: suscritores)
+            if(proceso.getIdProceso().equals(processID))
+                return proceso;
         return null;
     }
     

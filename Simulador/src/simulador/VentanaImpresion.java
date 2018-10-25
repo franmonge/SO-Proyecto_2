@@ -53,24 +53,26 @@ public class VentanaImpresion extends javax.swing.JFrame {
         btngrpPriority = new javax.swing.ButtonGroup();
         tabpNavigator = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
+        panelConfigPriority = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         rdbtnProcess = new javax.swing.JRadioButton();
         rdbtnMessage = new javax.swing.JRadioButton();
-        jPanel6 = new javax.swing.JPanel();
+        panelConfigBuffer = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         spinBufferSize = new javax.swing.JSpinner();
         btnGoToCreateObject = new javax.swing.JButton();
+        btnGoToBatch = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         txfAddApp = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        spinAppPriority = new javax.swing.JSpinner();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAddApp = new javax.swing.JTable();
         btnAddApp = new javax.swing.JButton();
+        panelAppPriority = new javax.swing.JPanel();
+        spinAppPriority = new javax.swing.JSpinner();
+        jLabel7 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -90,7 +92,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         btnSendMessage = new javax.swing.JButton();
-        jPanel11 = new javax.swing.JPanel();
+        panelMessagePriority = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         spinMessagePriority = new javax.swing.JSpinner();
         jPanel12 = new javax.swing.JPanel();
@@ -98,6 +100,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
         cboPrinter = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
         btnPrint = new javax.swing.JButton();
+        btnPrintAll = new javax.swing.JButton();
         btnDisplay = new javax.swing.JButton();
         jPanel14 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
@@ -105,11 +108,23 @@ public class VentanaImpresion extends javax.swing.JFrame {
         spinNLinesBatch = new javax.swing.JSpinner();
         jLabel15 = new javax.swing.JLabel();
         btnExecuteNLinesBatch = new javax.swing.JButton();
+        btnResetSystem = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jPanel13 = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jPanel15 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        tblApplicationsList = new javax.swing.JTable();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        tblApplicationRecords = new javax.swing.JTable();
+        jLabel17 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
+        jPanel11 = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        tblPrintersList = new javax.swing.JTable();
+        jPanel13 = new javax.swing.JPanel();
+        jLabel19 = new javax.swing.JLabel();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        tblMessageDetails = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -122,10 +137,15 @@ public class VentanaImpresion extends javax.swing.JFrame {
         });
 
         tabpNavigator.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        tabpNavigator.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabpNavigatorMouseClicked(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelConfigPriority.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel1.setText("Print priority by:");
@@ -133,7 +153,8 @@ public class VentanaImpresion extends javax.swing.JFrame {
         btngrpPriority.add(rdbtnProcess);
         rdbtnProcess.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         rdbtnProcess.setSelected(true);
-        rdbtnProcess.setText("Process");
+        rdbtnProcess.setText("Application");
+        rdbtnProcess.setToolTipText("Messages in a printer queue will be chosen by the application priority");
         rdbtnProcess.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdbtnProcessActionPerformed(evt);
@@ -142,28 +163,29 @@ public class VentanaImpresion extends javax.swing.JFrame {
 
         btngrpPriority.add(rdbtnMessage);
         rdbtnMessage.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        rdbtnMessage.setText("Message");
+        rdbtnMessage.setText("File");
+        rdbtnMessage.setToolTipText("Messages in a printer queue will be chosen by the file priority");
         rdbtnMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdbtnMessageActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelConfigPriorityLayout = new javax.swing.GroupLayout(panelConfigPriority);
+        panelConfigPriority.setLayout(panelConfigPriorityLayout);
+        panelConfigPriorityLayout.setHorizontalGroup(
+            panelConfigPriorityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelConfigPriorityLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelConfigPriorityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(rdbtnProcess)
                     .addComponent(jLabel1)
                     .addComponent(rdbtnMessage))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        panelConfigPriorityLayout.setVerticalGroup(
+            panelConfigPriorityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelConfigPriorityLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(28, 28, 28)
@@ -173,27 +195,29 @@ public class VentanaImpresion extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelConfigBuffer.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel2.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel2.setText("Printers' buffer size");
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        spinBufferSize.setToolTipText("Number of messages allowed to be queued at the same time in every printer");
+
+        javax.swing.GroupLayout panelConfigBufferLayout = new javax.swing.GroupLayout(panelConfigBuffer);
+        panelConfigBuffer.setLayout(panelConfigBufferLayout);
+        panelConfigBufferLayout.setHorizontalGroup(
+            panelConfigBufferLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelConfigBufferLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelConfigBufferLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(spinBufferSize, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        panelConfigBufferLayout.setVerticalGroup(
+            panelConfigBufferLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelConfigBufferLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
@@ -201,11 +225,19 @@ public class VentanaImpresion extends javax.swing.JFrame {
                 .addGap(20, 20, 20))
         );
 
-        btnGoToCreateObject.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        btnGoToCreateObject.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         btnGoToCreateObject.setText("Next");
         btnGoToCreateObject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGoToCreateObjectActionPerformed(evt);
+            }
+        });
+
+        btnGoToBatch.setText("Batch execution");
+        btnGoToBatch.setToolTipText("Execute commands stored in a batch file");
+        btnGoToBatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGoToBatchActionPerformed(evt);
             }
         });
 
@@ -214,24 +246,33 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(90, 90, 90)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(96, 96, 96)
-                .addComponent(btnGoToCreateObject, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(panelConfigPriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(90, 90, 90)
+                        .addComponent(panelConfigBuffer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(251, 251, 251)
+                        .addComponent(btnGoToCreateObject)))
+                .addContainerGap(380, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnGoToBatch)
+                .addGap(391, 391, 391))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(97, 97, 97)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
-                .addComponent(btnGoToCreateObject, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                    .addComponent(panelConfigBuffer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelConfigPriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(88, 88, 88)
+                .addComponent(btnGoToCreateObject)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                .addComponent(btnGoToBatch)
+                .addGap(49, 49, 49))
         );
 
         tabpNavigator.addTab("Configs", jPanel2);
@@ -244,8 +285,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel5.setText("Application name:");
 
-        jLabel7.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        jLabel7.setText("Priority");
+        txfAddApp.setToolTipText("Name of the new application: e.g. Word");
 
         tblAddApp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -270,6 +310,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblAddApp.setToolTipText("List of the current applications existing on the system");
         jScrollPane1.setViewportView(tblAddApp);
         if (tblAddApp.getColumnModel().getColumnCount() > 0) {
             tblAddApp.getColumnModel().getColumn(0).setResizable(false);
@@ -277,11 +318,40 @@ public class VentanaImpresion extends javax.swing.JFrame {
         }
 
         btnAddApp.setText("Add");
+        btnAddApp.setToolTipText("Stores a new application on the system");
         btnAddApp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddAppActionPerformed(evt);
             }
         });
+
+        panelAppPriority.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        spinAppPriority.setToolTipText("Current priority of this application");
+
+        jLabel7.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel7.setText("Priority");
+
+        javax.swing.GroupLayout panelAppPriorityLayout = new javax.swing.GroupLayout(panelAppPriority);
+        panelAppPriority.setLayout(panelAppPriorityLayout);
+        panelAppPriorityLayout.setHorizontalGroup(
+            panelAppPriorityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAppPriorityLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelAppPriorityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(spinAppPriority, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addContainerGap(11, Short.MAX_VALUE))
+        );
+        panelAppPriorityLayout.setVerticalGroup(
+            panelAppPriorityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAppPriorityLayout.createSequentialGroup()
+                .addContainerGap(7, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
+                .addComponent(spinAppPriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -291,16 +361,16 @@ public class VentanaImpresion extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel3)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(txfAddApp, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(spinAppPriority, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(41, 41, 41)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                        .addComponent(panelAppPriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnAddApp)))
                 .addContainerGap())
         );
@@ -309,18 +379,15 @@ public class VentanaImpresion extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
-                .addGap(21, 21, 21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
                         .addComponent(txfAddApp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnAddApp)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(spinAppPriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                    .addComponent(panelAppPriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -333,7 +400,10 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel6.setText("Printer name");
 
+        txfAddPrinter.setToolTipText("Name of the new printer: e.g. Epson");
+
         btnAddPrinter.setText("Add");
+        btnAddPrinter.setToolTipText("Stores a new printer on the system");
         btnAddPrinter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddPrinterActionPerformed(evt);
@@ -363,6 +433,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblAddPrinter.setToolTipText("List of the current printers existing on the system");
         jScrollPane2.setViewportView(tblAddPrinter);
         if (tblAddPrinter.getColumnModel().getColumnCount() > 0) {
             tblAddPrinter.getColumnModel().getColumn(0).setResizable(false);
@@ -422,7 +493,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(52, 52, 52)
                 .addComponent(btnGoToRun)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -445,11 +516,12 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel8.setText("Send message to Printer");
 
-        cboSourceApp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboSourceApp.setToolTipText("Application selected to send a message");
 
-        cboDestinationPrinter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboDestinationPrinter.setToolTipText("Printer selected to receive a message from an application");
 
         btnUploadMessageFile.setText("Upload Message File");
+        btnUploadMessageFile.setToolTipText("Chose a new file to send within the message");
         btnUploadMessageFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUploadMessageFileActionPerformed(evt);
@@ -459,39 +531,42 @@ public class VentanaImpresion extends javax.swing.JFrame {
         txaFilePath.setEditable(false);
         txaFilePath.setColumns(20);
         txaFilePath.setRows(5);
+        txaFilePath.setToolTipText("Current path of the attached file for this message");
         jScrollPane3.setViewportView(txaFilePath);
 
-        jLabel9.setText("Process");
+        jLabel9.setText("Application");
 
         jLabel10.setText("Printer");
 
         btnSendMessage.setText("Send");
+        btnSendMessage.setEnabled(false);
         btnSendMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSendMessageActionPerformed(evt);
             }
         });
 
-        jPanel11.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelMessagePriority.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelMessagePriority.setToolTipText("Priority of the current message to be send");
 
         jLabel13.setText("Priority");
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelMessagePriorityLayout = new javax.swing.GroupLayout(panelMessagePriority);
+        panelMessagePriority.setLayout(panelMessagePriorityLayout);
+        panelMessagePriorityLayout.setHorizontalGroup(
+            panelMessagePriorityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMessagePriorityLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addComponent(spinMessagePriority, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+        panelMessagePriorityLayout.setVerticalGroup(
+            panelMessagePriorityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMessagePriorityLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelMessagePriorityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(spinMessagePriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -516,14 +591,14 @@ public class VentanaImpresion extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(jPanel10Layout.createSequentialGroup()
                                     .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel9)
-                                        .addComponent(jLabel10))
-                                    .addGap(51, 51, 51)
+                                        .addComponent(jLabel10)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(18, 18, 18)
                                     .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(cboSourceApp, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cboDestinationPrinter, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(jPanel10Layout.createSequentialGroup()
-                                    .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(panelMessagePriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnSendMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addGap(34, 34, 34))
@@ -548,7 +623,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnSendMessage)
-                    .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelMessagePriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
@@ -557,14 +632,23 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel11.setText("Print message from buffer");
 
-        cboPrinter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboPrinter.setToolTipText("Printer selected to print a message");
 
         jLabel12.setText("Printer");
 
         btnPrint.setText("Print");
+        btnPrint.setToolTipText("Prints 1 message from the selected printer, if the printer is empty it does nothing");
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
+            }
+        });
+
+        btnPrintAll.setText("Print all");
+        btnPrintAll.setToolTipText("Takes all the message in the selected printer and prints them in order from the Priority Configuration");
+        btnPrintAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintAllActionPerformed(evt);
             }
         });
 
@@ -574,13 +658,17 @@ public class VentanaImpresion extends javax.swing.JFrame {
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addGap(51, 51, 51)
                         .addComponent(cboPrinter, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnPrint, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPrintAll, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
@@ -593,11 +681,14 @@ public class VentanaImpresion extends javax.swing.JFrame {
                     .addComponent(cboPrinter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnPrint)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrint)
+                    .addComponent(btnPrintAll))
                 .addContainerGap())
         );
 
         btnDisplay.setText("Display");
+        btnDisplay.setToolTipText("Show the system status in a new tab");
         btnDisplay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDisplayActionPerformed(evt);
@@ -610,11 +701,15 @@ public class VentanaImpresion extends javax.swing.JFrame {
         jLabel14.setText("Batch instruction execution");
 
         btnLoadBatchFile.setText("Load batch file");
+        btnLoadBatchFile.setToolTipText("Selects the file in which there is configurations and commands to execute");
+
+        spinNLinesBatch.setToolTipText("Current number of lines to be executed, if executed multiple times, the next line to be executed is the next where the last one stands by");
 
         jLabel15.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel15.setText("Execute n lines");
 
         btnExecuteNLinesBatch.setText("Execute");
+        btnExecuteNLinesBatch.setToolTipText("Call N number of lines from the spinner above and executes them one by one");
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
@@ -645,8 +740,16 @@ public class VentanaImpresion extends javax.swing.JFrame {
                     .addComponent(spinNLinesBatch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnExecuteNLinesBatch)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        btnResetSystem.setText("Reset");
+        btnResetSystem.setToolTipText("Goes back to the configuration tab to set and start the system again");
+        btnResetSystem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetSystemActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -660,9 +763,11 @@ public class VentanaImpresion extends javax.swing.JFrame {
                         .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                .addComponent(btnDisplay)
-                .addGap(53, 53, 53))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDisplay)
+                    .addComponent(btnResetSystem))
+                .addGap(47, 47, 47))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -676,76 +781,268 @@ public class VentanaImpresion extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(63, 63, 63)
                         .addComponent(btnDisplay)))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnResetSystem)
+                        .addGap(14, 14, 14))))
         );
 
         tabpNavigator.addTab("Run", jPanel3);
 
-        jPanel13.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel4.setLayout(new java.awt.BorderLayout());
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        jPanel15.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel15.setToolTipText("Current applications and their actions log in the system");
+
+        tblApplicationsList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Application", "Priority"
             }
-        ));
-        jScrollPane4.setViewportView(jTable3);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblApplicationsList.setToolTipText("Current applications in the system");
+        tblApplicationsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblApplicationsListMouseClicked(evt);
+            }
+        });
+        jScrollPane6.setViewportView(tblApplicationsList);
+        if (tblApplicationsList.getColumnModel().getColumnCount() > 0) {
+            tblApplicationsList.getColumnModel().getColumn(0).setResizable(false);
+            tblApplicationsList.getColumnModel().getColumn(1).setResizable(false);
+        }
+
+        tblApplicationRecords.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Action", "Message", "Timestamp"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblApplicationRecords.setToolTipText("Log actions for the selected application on the left table");
+        tblApplicationRecords.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblApplicationRecordsMouseClicked(evt);
+            }
+        });
+        jScrollPane7.setViewportView(tblApplicationRecords);
+        if (tblApplicationRecords.getColumnModel().getColumnCount() > 0) {
+            tblApplicationRecords.getColumnModel().getColumn(0).setResizable(false);
+            tblApplicationRecords.getColumnModel().getColumn(1).setResizable(false);
+            tblApplicationRecords.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        jLabel17.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel17.setText("Applications List");
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 166, Short.MAX_VALUE)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(jLabel17)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addComponent(jLabel17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel4.add(jPanel15, java.awt.BorderLayout.PAGE_START);
+
+        jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel11.setToolTipText("Current printers in the system");
+
+        jLabel18.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel18.setText("Printers List");
+
+        tblPrintersList.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Printer", "Buffer remaining space", "Process Related"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblPrintersList.setToolTipText("Current printers in the system");
+        tblPrintersList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPrintersListMouseClicked(evt);
+            }
+        });
+        jScrollPane9.setViewportView(tblPrintersList);
+        if (tblPrintersList.getColumnModel().getColumnCount() > 0) {
+            tblPrintersList.getColumnModel().getColumn(0).setResizable(false);
+            tblPrintersList.getColumnModel().getColumn(1).setResizable(false);
+            tblPrintersList.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18))
+                .addContainerGap(409, Short.MAX_VALUE))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addComponent(jLabel18)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel13.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel13.setToolTipText("Message displayed from the Application table selected or the Printers table above");
+
+        jLabel19.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel19.setText("Message Details");
+
+        tblMessageDetails.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Message", "Path", "Application", "Printer", "Priority"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblMessageDetails.setToolTipText("Message displayed from the Application table selected or the Printers table above");
+        jScrollPane10.setViewportView(tblMessageDetails);
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(626, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                .addContainerGap(112, Short.MAX_VALUE)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                .addGap(9, 9, 9))
         );
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(274, Short.MAX_VALUE))
-        );
-
-        tabpNavigator.addTab("Display", jPanel4);
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 939, Short.MAX_VALUE)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 526, Short.MAX_VALUE)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        tabpNavigator.addTab("Help", jPanel9);
+        jPanel4.add(jPanel9, java.awt.BorderLayout.CENTER);
+
+        tabpNavigator.addTab("Display", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -760,41 +1057,15 @@ public class VentanaImpresion extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabpNavigator)
-                .addContainerGap())
+                .addComponent(tabpNavigator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void rdbtnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnProcessActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdbtnProcessActionPerformed
-
-    private void rdbtnMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnMessageActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rdbtnMessageActionPerformed
-
-    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        // TODO add your handling code here:
-        MailBox mail = controlador.getMailBox(cboPrinter.getSelectedItem().toString());
-        Proceso subscriber = mail.getSuscritos().get(0);
-        controlador.receiveMessage(subscriber.getIdProceso(), mail.getIdMailBox());
-    }//GEN-LAST:event_btnPrintActionPerformed
-
-    private void btnDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDisplayActionPerformed
-
-    private void btnAddAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAppActionPerformed
-        // TODO add your handling code here:
-        String name = txfAddApp.getText();
-        Integer priority = Integer.parseInt(spinAppPriority.getValue().toString());
-        controlador.addProcess(new Proceso(name, priority));
-        refreshTableAddApp();
-    }//GEN-LAST:event_btnAddAppActionPerformed
-
     void refreshTableAddApp(){
+        tblAddApp.setVisible(false); tblAddApp.setVisible(true);
         DefaultTableModel model = (DefaultTableModel)tblAddApp.getModel();
         model.getDataVector().removeAllElements();
         
@@ -803,33 +1074,8 @@ public class VentanaImpresion extends javax.swing.JFrame {
         }
     }
     
-    private void btnAddPrinterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPrinterActionPerformed
-        // TODO add your handling code here:
-        Integer bufferSize = controlador.getConfiguration().getBufferSize();
-        String name = txfAddPrinter.getText();
-        MailBox mail = new MailBox(name, bufferSize);
-        Proceso subscriber = new Proceso(name+"Subscriber", -1);
-        controlador.addMailBox(mail);
-        controlador.subscribeProcess(mail, subscriber);
-        controlador.addSubscriber(subscriber);
-        
-        refreshTableAddPrinter();
-        
-        txfAddPrinter.setText("");
-        txfAddPrinter.requestFocus();
-        
-        
-        File dir = new File(name);
-        dir.mkdir(); // crea la carpeta de la impresora
-        File log = new File(name+"/log.txt"); // este seria el archivo dentro de la carpeta para el log
-        try {
-            FileUtils.writeStringToFile(log, "", "UTF-8"); //aca se crea el log
-        } catch (IOException ex) {
-            Logger.getLogger(VentanaImpresion.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnAddPrinterActionPerformed
-
     void refreshTableAddPrinter(){
+        tblAddPrinter.setVisible(false); tblAddPrinter.setVisible(true);
         DefaultTableModel model = (DefaultTableModel)tblAddPrinter.getModel();
         model.getDataVector().removeAllElements();
         
@@ -839,49 +1085,6 @@ public class VentanaImpresion extends javax.swing.JFrame {
     }
     
     
-    private void btnGoToCreateObjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoToCreateObjectActionPerformed
-        // TODO add your handling code here:
-        Integer bufferSize = Integer.parseInt(spinBufferSize.getValue().toString());
-        Priority priority = (rdbtnProcess.isSelected())?Priority.PROCESS:Priority.MESSAGE;
-        controlador.setConfiguration(Sync_Receive.NON_BLOCKING, Sync_Send.NON_BLOCKING, Addressing.STATIC, Format_Content.IMAGE, Format_Length.VARIABLE, MailBox_Discipline.PRIORITY, priority, bufferSize);
-        tabpNavigator.setSelectedIndex(1);
-    }//GEN-LAST:event_btnGoToCreateObjectActionPerformed
-
-    private void btnGoToRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoToRunActionPerformed
-        // TODO add your handling code here:
-        refreshRunView();
-        tabpNavigator.setSelectedIndex(2);
-    }//GEN-LAST:event_btnGoToRunActionPerformed
-
-    private void btnUploadMessageFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadMessageFileActionPerformed
-        // TODO add your handling code here:
-        try {
-            JFileChooser chooser = new JFileChooser();
-            int returnVal = chooser.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                messagePath = chooser.getSelectedFile().getPath();
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error: File can't be uploaded ", "File Error", 0);
-        }
-        
-        txaFilePath.setText(messagePath);
-    }//GEN-LAST:event_btnUploadMessageFileActionPerformed
-
-    private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
-        // TODO add your handling code here:
-        Integer idCounter = controlador.messageIDCounter;
-        String source = cboSourceApp.getSelectedItem().toString();
-        String destination = cboDestinationPrinter.getSelectedItem().toString();
-        Integer priority = Integer.parseInt(spinMessagePriority.getValue().toString());
-        controlador.sendMessage(new Mensaje(idCounter, messagePath, source, destination, priority));
-        
-        cboSourceApp.setSelectedIndex(0);
-        cboDestinationPrinter.setSelectedIndex(0);
-        txaFilePath.setText("");
-        
-    }//GEN-LAST:event_btnSendMessageActionPerformed
-
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
     }//GEN-LAST:event_formWindowClosed
@@ -894,6 +1097,234 @@ public class VentanaImpresion extends javax.swing.JFrame {
             Logger.getLogger(VentanaImpresion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void tabpNavigatorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabpNavigatorMouseClicked
+        // TODO add your handling code here:
+        if(tabpNavigator.getSelectedIndex() == 1)
+        txfAddApp.requestFocus();
+    }//GEN-LAST:event_tabpNavigatorMouseClicked
+
+    private void btnDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplayActionPerformed
+        // TODO add your handling code here:
+        fillDisplayView();
+        tabpNavigator.setSelectedIndex(3);
+        
+    }//GEN-LAST:event_btnDisplayActionPerformed
+
+    void fillDisplayView(){
+        DefaultTableModel model = (DefaultTableModel) tblApplicationsList.getModel();
+        model.getDataVector().removeAllElements(); 
+        for(Proceso p: controlador.getProcesses())
+            model.addRow(new Object[]{p.getIdProceso(), p.getPriority()});
+        
+        DefaultTableModel model2 = (DefaultTableModel) tblApplicationRecords.getModel();
+        model2.getDataVector().removeAllElements(); 
+        
+        DefaultTableModel model3 = (DefaultTableModel) tblPrintersList.getModel();
+        model3.getDataVector().removeAllElements(); 
+        for(MailBox mail: controlador.getMailBoxes())
+            model3.addRow(new Object[]{mail.getIdMailBox(), controlador.getConfiguration().getBufferSize()-mail.getBufferMensajes().size(), mail.getSuscritos().get(0).getIdProceso()});
+        
+        DefaultTableModel model4 = (DefaultTableModel) tblMessageDetails.getModel();
+        model4.getDataVector().removeAllElements(); 
+        
+    }
+    
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        // TODO add your handling code here:
+        MailBox mail = controlador.getMailBox(cboPrinter.getSelectedItem().toString());
+        Proceso subscriber = mail.getSuscritos().get(0);
+        controlador.receiveMessage(subscriber.getIdProceso(), mail.getIdMailBox());
+    }//GEN-LAST:event_btnPrintActionPerformed
+
+    private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
+        // TODO add your handling code here:
+        String destination = cboDestinationPrinter.getSelectedItem().toString();
+        if(controlador.getMailBox(destination).getBufferMensajes().size() < controlador.getConfiguration().getBufferSize()){
+            Integer idCounter = controlador.messageIDCounter;
+            String source = cboSourceApp.getSelectedItem().toString();
+            Integer priority = Integer.parseInt(spinMessagePriority.getValue().toString());
+            controlador.sendMessage(new Mensaje(idCounter, messagePath, source, destination, priority));
+            btnSendMessage.setEnabled(false);
+        }else{
+            JOptionPane.showMessageDialog(null, "Printer's buffer is full", "Send error", 0);
+        }
+
+        cboSourceApp.setSelectedIndex(0);
+        cboDestinationPrinter.setSelectedIndex(0);
+        txaFilePath.setText("");
+
+    }//GEN-LAST:event_btnSendMessageActionPerformed
+
+    private void btnUploadMessageFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadMessageFileActionPerformed
+        // TODO add your handling code here:
+        try {
+            JFileChooser chooser = new JFileChooser();
+            int returnVal = chooser.showOpenDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                messagePath = chooser.getSelectedFile().getPath();
+                btnSendMessage.setEnabled(true);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: File can't be uploaded ", "File Error", 0);
+        }
+
+        txaFilePath.setText(messagePath);
+    }//GEN-LAST:event_btnUploadMessageFileActionPerformed
+
+    private void btnGoToRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoToRunActionPerformed
+        // TODO add your handling code here:
+        refreshRunView();
+        tabpNavigator.setSelectedIndex(2);
+    }//GEN-LAST:event_btnGoToRunActionPerformed
+
+    private void btnAddPrinterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPrinterActionPerformed
+        // TODO add your handling code here:
+        Integer bufferSize = controlador.getConfiguration().getBufferSize();
+        String name = txfAddPrinter.getText();
+        MailBox mail = new MailBox(name, bufferSize);
+        Proceso subscriber = new Proceso(name+"Subscriber", -1);
+        controlador.addMailBox(mail);
+        controlador.subscribeProcess(mail, subscriber);
+        controlador.addSubscriber(subscriber);
+
+        refreshTableAddPrinter();
+
+        txfAddPrinter.setText("");
+        txfAddPrinter.requestFocus();
+
+        File dir = new File(name);
+        dir.mkdir(); // crea la carpeta de la impresora
+        File log = new File(name+"/log.txt"); // este seria el archivo dentro de la carpeta para el log
+        try {
+            FileUtils.writeStringToFile(log, "", "UTF-8"); //aca se crea el log
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaImpresion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddPrinterActionPerformed
+
+    private void btnAddAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAppActionPerformed
+        // TODO add your handling code here:
+        String name = txfAddApp.getText();
+        Integer priority = Integer.parseInt(spinAppPriority.getValue().toString());
+        controlador.addProcess(new Proceso(name, priority));
+        refreshTableAddApp();
+
+        txfAddApp.requestFocus();
+        txfAddApp.setText("");
+    }//GEN-LAST:event_btnAddAppActionPerformed
+
+    private void btnGoToCreateObjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoToCreateObjectActionPerformed
+        // TODO add your handling code here:
+        txfAddApp.requestFocus();
+        Integer bufferSize = Integer.parseInt(spinBufferSize.getValue().toString());
+        Priority priority = (rdbtnProcess.isSelected())?Priority.PROCESS:Priority.MESSAGE;
+        controlador.setConfiguration(Sync_Receive.NON_BLOCKING, Sync_Send.NON_BLOCKING, Addressing.STATIC, Format_Content.IMAGE, Format_Length.VARIABLE, MailBox_Discipline.PRIORITY, priority, bufferSize);
+        tabpNavigator.setSelectedIndex(1);
+        checkPriorityPanels();
+        btnGoToCreateObject.setEnabled(false);
+        
+        
+        btnGoToBatch.setEnabled(false);
+        rdbtnMessage.setEnabled(false);
+        rdbtnProcess.setEnabled(false);
+        spinBufferSize.setEnabled(false);
+    }//GEN-LAST:event_btnGoToCreateObjectActionPerformed
+
+    void checkPriorityPanels(){
+        if(controlador.getConfiguration().getPriority().equals(Priority.MESSAGE))
+            panelAppPriority.setVisible(false);
+        else
+            panelMessagePriority.setVisible(false);
+    }
+    
+    private void rdbtnMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnMessageActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rdbtnMessageActionPerformed
+
+    private void rdbtnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbtnProcessActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rdbtnProcessActionPerformed
+
+    private void btnGoToBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoToBatchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGoToBatchActionPerformed
+
+    private void tblApplicationsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblApplicationsListMouseClicked
+        // TODO add your handling code here:
+        tblApplicationRecords.setVisible(false); tblApplicationRecords.setVisible(true);
+        tblMessageDetails.setVisible(false); tblMessageDetails.setVisible(true);
+        
+        DefaultTableModel model = (DefaultTableModel) tblApplicationRecords.getModel();
+        DefaultTableModel model2 = (DefaultTableModel) tblMessageDetails.getModel();
+        
+        model2.getDataVector().removeAllElements();
+        model.getDataVector().removeAllElements();
+        
+        Proceso p = controlador.getProcess(tblApplicationsList.getValueAt(tblApplicationsList.getSelectedRow(),0).toString());
+        for(MessageRecord record: p.getRecordHistory()){
+            model.addRow(new Object[]{record.getAction(), record.getMessage().getIdMensaje(), record.getTimeStamp()});
+            model2.addRow(new Object[]{record.getMessage().getIdMensaje(), record.getMessage().getPath(), record.getMessage().getSourceID(), record.getMessage().getDestinationID(), record.getMessage().getPriority()});
+        }
+        
+        
+    }//GEN-LAST:event_tblApplicationsListMouseClicked
+
+    private void tblApplicationRecordsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblApplicationRecordsMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_tblApplicationRecordsMouseClicked
+
+    private void tblPrintersListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPrintersListMouseClicked
+        // TODO add your handling code here:
+        tblMessageDetails.setVisible(false); tblMessageDetails.setVisible(true);
+        DefaultTableModel model2 = (DefaultTableModel) tblMessageDetails.getModel();
+        model2.getDataVector().removeAllElements();
+        MailBox mail = controlador.getMailBox(tblPrintersList.getValueAt(tblPrintersList.getSelectedRow(), 0).toString());
+        
+        for(Mensaje message: mail.getBufferMensajes())
+            model2.addRow(new Object[]{message.getIdMensaje(), message.getPath(), message.getSourceID(), message.getDestinationID(), message.getPriority()});
+        
+        tblApplicationRecords.setVisible(false); tblApplicationRecords.setVisible(true);
+        DefaultTableModel model3 = (DefaultTableModel) tblApplicationRecords.getModel();
+        model3.getDataVector().removeAllElements();
+        Proceso suscritor = mail.getSuscritos().get(0);
+        for(MessageRecord record: suscritor.getRecordHistory())
+            model3.addRow(new Object[]{record.getAction(), record.getMessage().getIdMensaje(), record.getTimeStamp()});
+        
+    }//GEN-LAST:event_tblPrintersListMouseClicked
+
+    private void btnResetSystemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetSystemActionPerformed
+        // TODO add your handling code here:
+        panelAppPriority.setVisible(true);
+        spinAppPriority.setValue(0);
+        
+        panelMessagePriority.setVisible(true);
+        spinMessagePriority.setValue(0);
+        
+        btnGoToBatch.setEnabled(true);
+        btnGoToCreateObject.setEnabled(true);
+        rdbtnMessage.setEnabled(true);
+        rdbtnProcess.setEnabled(true);
+        spinBufferSize.setEnabled(true);
+        spinBufferSize.setValue(0);
+        spinNLinesBatch.setValue(0);
+        
+        controlador.resetSystem();
+        
+        refreshTableAddApp();
+        refreshTableAddPrinter();
+        
+        tabpNavigator.setSelectedIndex(0);
+    }//GEN-LAST:event_btnResetSystemActionPerformed
+
+    private void btnPrintAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintAllActionPerformed
+        // TODO add your handling code here:
+        MailBox mail = controlador.getMailBox(cboPrinter.getSelectedItem().toString());
+        Proceso subscriber = mail.getSuscritos().get(0);
+        controlador.receiveAllMessage(subscriber.getIdProceso(), mail.getIdMailBox());
+        
+    }//GEN-LAST:event_btnPrintAllActionPerformed
 
     void removePrintersFolders() throws IOException{
         for(MailBox printer: controlador.getMailBoxes()){
@@ -965,10 +1396,13 @@ public class VentanaImpresion extends javax.swing.JFrame {
     private javax.swing.JButton btnAddPrinter;
     private javax.swing.JButton btnDisplay;
     private javax.swing.JButton btnExecuteNLinesBatch;
+    private javax.swing.JButton btnGoToBatch;
     private javax.swing.JButton btnGoToCreateObject;
     private javax.swing.JButton btnGoToRun;
     private javax.swing.JButton btnLoadBatchFile;
     private javax.swing.JButton btnPrint;
+    private javax.swing.JButton btnPrintAll;
+    private javax.swing.JButton btnResetSystem;
     private javax.swing.JButton btnSendMessage;
     private javax.swing.JButton btnUploadMessageFile;
     private javax.swing.ButtonGroup btngrpPriority;
@@ -982,6 +1416,9 @@ public class VentanaImpresion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -996,19 +1433,24 @@ public class VentanaImpresion extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable3;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JPanel panelAppPriority;
+    private javax.swing.JPanel panelConfigBuffer;
+    private javax.swing.JPanel panelConfigPriority;
+    private javax.swing.JPanel panelMessagePriority;
     private javax.swing.JRadioButton rdbtnMessage;
     private javax.swing.JRadioButton rdbtnProcess;
     private javax.swing.JSpinner spinAppPriority;
@@ -1018,6 +1460,10 @@ public class VentanaImpresion extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tabpNavigator;
     private javax.swing.JTable tblAddApp;
     private javax.swing.JTable tblAddPrinter;
+    private javax.swing.JTable tblApplicationRecords;
+    private javax.swing.JTable tblApplicationsList;
+    private javax.swing.JTable tblMessageDetails;
+    private javax.swing.JTable tblPrintersList;
     private javax.swing.JTextArea txaFilePath;
     private javax.swing.JTextField txfAddApp;
     private javax.swing.JTextField txfAddPrinter;

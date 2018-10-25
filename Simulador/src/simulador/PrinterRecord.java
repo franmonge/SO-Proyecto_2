@@ -5,12 +5,15 @@
  */
 package simulador;
 
+import Config_Enums.Record_Message_Action;
+
 /**
  *
  * @author aleandro
  */
 public class PrinterRecord {
-    
-    
+    private String timeStamp;
+    private Record_Message_Action action;
+    private Mensaje message;
     
 }

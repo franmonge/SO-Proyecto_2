@@ -34,6 +34,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
     String messagePath;
     String batchFilePath;
     public static BufferedReader BUFFERREADER;
+    public static Boolean BATCHCONFIGURED = false;
     
     /**
      * Creates new form VentanaImpresion
@@ -1250,14 +1251,14 @@ public class VentanaImpresion extends javax.swing.JFrame {
         }
     }
     
-    void refreshTableAddPrinter(){
-        DefaultTableModel model = (DefaultTableModel)tblAddPrinter.getModel();
-        model.getDataVector().removeAllElements();
-        
-        for(MailBox mail: controlador.getMailBoxes()){
-            model.addRow(new Object[]{mail.getIdMailBox()});
-        }
-    }
+//    void refreshTableAddPrinter(){
+//        DefaultTableModel model = (DefaultTableModel)tblAddPrinter.getModel();
+//        model.getDataVector().removeAllElements();
+//        
+//        for(MailBox mail: controlador.getMailBoxes()){
+//            model.addRow(new Object[]{mail.getIdMailBox()});
+//        }
+//    }
     
     
     private void btnAddAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAppActionPerformed
@@ -1305,6 +1306,7 @@ public class VentanaImpresion extends javax.swing.JFrame {
 
     private void btnGoToBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoToBatchActionPerformed
         // TODO add your handling code here:
+        tabpNavigator.setSelectedIndex(2);
     }//GEN-LAST:event_btnGoToBatchActionPerformed
 
     private void tblApplicationsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblApplicationsListMouseClicked
@@ -1383,77 +1385,135 @@ public class VentanaImpresion extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnPrintAllActionPerformed
 
-    private void btnExecuteNLinesBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExecuteNLinesBatchActionPerformed
-        // TODO add your handling code here:       
+    private Integer batchConfiguration(){
         String linea;
         int lineCounter = 1;
-        ArrayList<String> config = new ArrayList<String>();        
-        try {
-            while((linea = BUFFERREADER.readLine()) != null){    //Las primeras 2 lineas del txt son de configuracion
-                if(lineCounter <= 2){
-                    config.add(linea);
-                    lineCounter++;
-                }
-                else
-                    break;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }        
-        
+        ArrayList<String> config = new ArrayList<String>(); 
         String[] arrOfStr = null;
-        arrOfStr = config.get(0).split(":", 2);
-        Integer bufferSize = Integer.parseInt(arrOfStr[1]); 
-        arrOfStr = config.get(1).split(":", 2);
-        Priority priority = (arrOfStr[1].equals(Priority.PROCESS))?Priority.PROCESS:Priority.MESSAGE;        
-        controlador.setConfiguration(Sync_Receive.NON_BLOCKING, Sync_Send.NON_BLOCKING, Addressing.STATIC, Format_Content.IMAGE, Format_Length.VARIABLE, MailBox_Discipline.PRIORITY, priority, bufferSize);     
         
-        JOptionPane.showMessageDialog(null, "\n BufferSize: " + bufferSize + "\n Priority: " + priority, "Configuration", 1);
-        tabpNavigator.setSelectedIndex(1);
-        
-        //Aca ya esta la configuracion cargada e inicia creacion de procesos y envio de mensajes
-        config.clear();
+                          
+            try {
+                while((linea = BUFFERREADER.readLine()) != null){    //Las primeras 2 lineas del txt son de configuracion
+                    if(lineCounter <= 2){
+                        config.add(linea);
+                        lineCounter++;
+                    }
+                    else
+                        break;
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }        
+            
+            arrOfStr = config.get(0).split(":", 2);
+            Integer bufferSize = Integer.parseInt(arrOfStr[1]); 
+            Priority priority = (config.get(1).equals("Priority:PROCESS"))?Priority.PROCESS:Priority.MESSAGE;
+            controlador.setConfiguration(Sync_Receive.NON_BLOCKING, Sync_Send.NON_BLOCKING, Addressing.STATIC, Format_Content.IMAGE, Format_Length.VARIABLE, MailBox_Discipline.PRIORITY, priority, bufferSize);     
+            BATCHCONFIGURED = true;
+            JOptionPane.showMessageDialog(null, "\n BufferSize: " + bufferSize + "\n Priority: " + priority, "Configuration", 1);
+            tabpNavigator.setSelectedIndex(1);
+            return lineCounter;
+    }
+    
+    private void batchInstrutions(Integer lineCounter){
+        String linea;
+        String[] arrOfStr = null;
         try {
-            while((linea = BUFFERREADER.readLine()) != null){
-                //Las primeras 2 lineas del txt son de configuracio
-                if(lineCounter > 2){
-                    if(linea.contains("CreatePrinter")){
-                        arrOfStr = linea.split(":",2);
-                        BatchAddPrinterActionPerformed(arrOfStr[1]);
-                        System.out.println("Printer created: " + arrOfStr[1]);
-                    }
-                    if(linea.contains("CreateApp")){
-                        arrOfStr = linea.split(":",3);
-                        controlador.addProcess(new Proceso(arrOfStr[1], Integer.parseInt(arrOfStr[2])));
-                        refreshTableAddApp();
-                        System.out.println("App created: " + arrOfStr[1] + " : " + arrOfStr[2]);
-                    }
-                    if(linea.contains("Send")){
-                        arrOfStr = linea.split(":",5);
-                        Integer idCounter = controlador.messageIDCounter;
-                        controlador.sendMessage(new Mensaje(idCounter, "C:" + arrOfStr[3], arrOfStr[1], arrOfStr[2], Integer.parseInt(arrOfStr[4])));
-                        System.out.println("Message send: " + arrOfStr[1] + " a " + arrOfStr[2] + " Msj: " + "C:" + arrOfStr[3] + " Prioridad: " + arrOfStr[4]);
-                    }
-                    if(linea.contains("Receive")){
-                        arrOfStr = linea.split(":",2);                        
-                        batchPrintActionPerformed(arrOfStr[1]);
-                        System.out.println("Message printed: " + arrOfStr[1] + " a " );
-                    }
-                    lineCounter++;
+            if(lineCounter < Integer.parseInt(spinNLinesBatch.getValue().toString())){
+                System.out.println(lineCounter);
+                    
+                while(lineCounter < Integer.parseInt(spinNLinesBatch.getValue().toString()) && (linea = BUFFERREADER.readLine()) != null){
+                    System.out.println(linea);
+                    System.out.println(lineCounter);
+                    //Las primeras 2 lineas del txt son de configuracio
+                    //if(lineCounter < Integer.parseInt(spinNLinesBatch.getValue().toString())){
+                        if(linea.contains("CreatePrinter")){
+                            arrOfStr = linea.split(":",2);
+                            BatchAddPrinterActionPerformed(arrOfStr[1]);
+                            System.out.println("Printer created: " + arrOfStr[1]);
+                        }
+                        if(linea.contains("CreateApp")){
+                            arrOfStr = linea.split(":",3);
+                            controlador.addProcess(new Proceso(arrOfStr[1], Integer.parseInt(arrOfStr[2])));
+                            refreshTableAddApp();
+                            System.out.println("App created: " + arrOfStr[1] + " : " + arrOfStr[2]);
+                        }
+                        if(linea.contains("Send")){
+                            arrOfStr = linea.split(":",5);
+                            Integer idCounter = controlador.messageIDCounter;
+                            controlador.sendMessage(new Mensaje(idCounter, "C:" + arrOfStr[3], arrOfStr[1], arrOfStr[2], Integer.parseInt(arrOfStr[4])));
+                            System.out.println("Message send: " + arrOfStr[1] + " a " + arrOfStr[2] + " Msj: " + "C:" + arrOfStr[3] + " Prioridad: " + arrOfStr[4]);
+                        }
+                        if(linea.contains("Receive")){
+                            arrOfStr = linea.split(":",2);                        
+                            batchPrintActionPerformed(arrOfStr[1]);
+                            System.out.println("Message printed: " + arrOfStr[1] + " a " );
+                        }
+                        lineCounter++;
+                    //}
+                    //else
+                      //  break;
                 }
             }
+            
         } catch (IOException ex) {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void btnExecuteNLinesBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExecuteNLinesBatchActionPerformed
+        // TODO add your handling code here: 
+        //String linea;
+        int lineCounter;
+        //ArrayList<String> config = new ArrayList<String>(); 
+        //String[] arrOfStr = null;
         
-        refreshRunView();
-        //Revisar si es necesario mostrar todo lo de interactivo para cuando es por BATCH.
-//        if(isOkToStart()){
-//            checkUploadFileVisibility();
-//            fillRunView();
-//            checkDisciplinePriority();
-//            checkImplicitAddressingView();
-//        }
+        if(!BATCHCONFIGURED){ //si configuracion no ha sido cargada, la carga
+            lineCounter = batchConfiguration();
+            batchInstrutions(lineCounter);
+            refreshRunView();
+        }       
+        else{
+            System.out.println("ENTRA ELSE CONFIG BATCH");
+            batchInstrutions(0);
+            //refreshRunView();
+//            lineCounter = 3;
+//            config.clear();
+//            try {
+//                while((linea = BUFFERREADER.readLine()) != null){
+//                    //Las primeras 2 lineas del txt son de configuracio
+//                    if(lineCounter > 2 && lineCounter < Integer.parseInt(spinNLinesBatch.getValue().toString())){
+//                        if(linea.contains("CreatePrinter")){
+//                            arrOfStr = linea.split(":",2);
+//                            BatchAddPrinterActionPerformed(arrOfStr[1]);
+//                            System.out.println("Printer created: " + arrOfStr[1]);
+//                        }
+//                        if(linea.contains("CreateApp")){
+//                            arrOfStr = linea.split(":",3);
+//                            controlador.addProcess(new Proceso(arrOfStr[1], Integer.parseInt(arrOfStr[2])));
+//                            refreshTableAddApp();
+//                            System.out.println("App created: " + arrOfStr[1] + " : " + arrOfStr[2]);
+//                        }
+//                        if(linea.contains("Send")){
+//                            arrOfStr = linea.split(":",5);
+//                            Integer idCounter = controlador.messageIDCounter;
+//                            controlador.sendMessage(new Mensaje(idCounter, "C:" + arrOfStr[3], arrOfStr[1], arrOfStr[2], Integer.parseInt(arrOfStr[4])));
+//                            System.out.println("Message send: " + arrOfStr[1] + " a " + arrOfStr[2] + " Msj: " + "C:" + arrOfStr[3] + " Prioridad: " + arrOfStr[4]);
+//                        }
+//                        if(linea.contains("Receive")){
+//                            arrOfStr = linea.split(":",2);                        
+//                            batchPrintActionPerformed(arrOfStr[1]);
+//                            System.out.println("Message printed: " + arrOfStr[1] + " a " );
+//                        }
+//                        lineCounter++;
+//                    }
+//                }
+//            } catch (IOException ex) {
+//                Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+
+            refreshRunView();
+        }
     }//GEN-LAST:event_btnExecuteNLinesBatchActionPerformed
 
     private void btnLoadBatchFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadBatchFileActionPerformed
